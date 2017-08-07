@@ -15,7 +15,7 @@
             "name" : "Denis Utkin",
             "email": "dizirator@gmail.com",
             "role" : "Developer",
-            "homepage": "http://github.com/dizirator",
+            "homepage": "http://github.com/dizirator"
         }
     ],
     "minimum-stability": "dev",
