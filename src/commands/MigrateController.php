@@ -8,12 +8,11 @@
 namespace setrun\sys\commands;
 
 use Yii;
-use yii\db\Migration;
 use yii\helpers\Console;
 use yii\helpers\FileHelper;
 
 /**
- * Class MigrateController.
+ * Manages application migrations.
  */
 class MigrateController extends \yii\console\controllers\MigrateController
 {
@@ -37,7 +36,7 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     public function afterAction($action, $result)
     {
-        //FileHelper::removeDirectory($this->migrationPath);
+        FileHelper::removeDirectory($this->migrationPath);
         return parent::afterAction($action, $result);
     }
 
@@ -56,25 +55,25 @@ class MigrateController extends \yii\console\controllers\MigrateController
      */
     protected function copyMigrations() : void
     {
-        $this->stdout("Copy the migration files in a temp directory \n", Console::FG_YELLOW);
+        $this->stdout("\nCopy the migration files in a temp directory\n", Console::FG_YELLOW);
         FileHelper::removeDirectory($this->migrationPath);
         FileHelper::createDirectory($this->migrationPath);
         if (!is_dir($this->migrationPath)) {
-            $this->stdout("Could not create a temporary directory migration \n", Console::FG_RED);
+            $this->stdout("Could not create a temporary directory migration\n", Console::FG_RED);
             exit();
         }
-        $this->stdout("\t Created a directory migration \n", Console::FG_GREEN);
+        $this->stdout("\tCreated a directory migration\n", Console::FG_GREEN);
         if ($dirs = $this->findMigrationDirs()) {
             foreach ($dirs as $dir) {
                 FileHelper::copyDirectory($dir, $this->migrationPath);
             }
         }
-        $this->stdout("\t The copied files components migrations \n", Console::FG_GREEN);
+        $this->stdout("\tThe copied files components migrations\n", Console::FG_GREEN);
         $appMigrateDir = \Yii::getAlias("@app/commands");
         if (is_dir($appMigrateDir)) {
             FileHelper::copyDirectory($appMigrateDir, $this->migrationPath);
         }
-        $this->stdout("\t The copied files app migrations \n\n", Console::FG_GREEN);
+        $this->stdout("\tThe copied files app migrations\n\n", Console::FG_GREEN);
     }
 
     /**
