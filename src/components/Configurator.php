@@ -7,6 +7,7 @@
 
 namespace setrun\sys\components;
 
+use setrun\sys\helpers\FileHelper;
 use Yii;
 use yii\db\Query;
 use yii\db\Connection;
@@ -124,10 +125,10 @@ class Configurator
      */
     public function load(array $files) : void
     {
-       // $this->loadStorageConfig();
+        $this->loadStorageConfig();
         $this->appConfig = $this->getCache()->getOrSet($this->env, function() use ($files){
             $baseConfig            = $this->loadBaseConfig($files);
-            $installedModuleConfig = $this->loadInstalledModuleConfig();
+            $installedModuleConfig = $this->loadInstalledModuleConfig($baseConfig);
             return ArrayHelper::merge($baseConfig, $installedModuleConfig);
         });
     }
@@ -213,14 +214,25 @@ class Configurator
      * Load a base configuration of installed modules.
      * @return array
      */
-    protected function loadInstalledModuleConfig() : array
+    protected function loadInstalledModuleConfig(array $baseConfig) : array
     {
         $config = [];
-        $appPath            = defined('APP_DIR') ? APP_DIR : ROOT_DIR . '/applications/master';
+        $env    = $this->env === self::WEB ? 'web' : 'console';
+
+        $mainFiles = FileHelper::findExtensionsFiles('config/main.php');
+        $envFiles  = FileHelper::findExtensionsFiles("config/{$env}.php");
+
+        foreach ($mainFiles as $mainFile) {
+            $config = ArrayHelper::merge($config, (array) require $mainFile);
+        }
+        foreach ($envFiles as $envFile) {
+            $config = ArrayHelper::merge($config, (array) require $envFile);
+        }
+
+        /*$appPath            = defined('APP_DIR') ? APP_DIR : ROOT_DIR . '/applications/master';
         $installedPath      = $appPath . '/config/modules' . ($this->env === self::WEB ? '' : '/console');
         $installedLocalPath = $installedPath . '/local';
         $modulesPath        = ROOT_DIR . '/common/modules';
-        /** @var $item \SplFileInfo  */
         foreach (new \GlobIterator($installedPath . '/*.php') as $item) {
             $name = $item->getBaseName('.php');
             if (!is_dir($modulesPath . '/' . $name)) {
@@ -232,7 +244,8 @@ class Configurator
                 $module = ArrayHelper::merge($module, (array) require $local->getRealPath());
             }
             $config = ArrayHelper::merge($config, $module);
-        }
+        }*/
+
         return $config;
     }
 
