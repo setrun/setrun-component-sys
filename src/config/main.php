@@ -16,6 +16,9 @@ return [
         'config' => [
             'class' => 'setrun\sys\components\Configurator'
         ],
+        'authManager' => [
+            'class' => 'setrun\sys\components\rbac\HybridManager'
+        ],
         'i18n' => [
             'translations' => [
                 'setrun/sys*' => [

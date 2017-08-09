@@ -50,4 +50,29 @@ class FileHelper extends \yii\helpers\FileHelper
         }
         return $output;
     }
+
+    /**
+     * Load configurations files.
+     * @param mixed $files
+     * @param array $config
+     * @return array
+     */
+    public static function loadExtensionsFiles($files, array $config = []) : array
+    {
+        $callbacks = [];
+        $files     = !is_array($files) ? static::findExtensionsFiles($files) : $files;
+        foreach ($files as $file) {
+            $item = require  $file;
+            if ($item instanceof \Closure) {
+                $callbacks[] = $item;
+            }
+            if (is_array($item)) {
+                $config = array_replace_recursive($config, $item);
+            }
+        }
+        foreach ($callbacks as $callback) {
+            $config = $callback($config);
+        }
+        return $config;
+    }
 }

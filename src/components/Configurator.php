@@ -120,16 +120,15 @@ class Configurator
 
     /**
      * Load a configuration of app.
-     * @param array $files
+     * @param  array $files
      * @return void
      */
     public function load(array $files) : void
     {
         $this->loadStorageConfig();
         $this->appConfig = $this->getCache()->getOrSet($this->env, function() use ($files){
-            $baseConfig            = $this->loadBaseConfig($files);
-            $installedModuleConfig = $this->loadInstalledModuleConfig($baseConfig);
-            return ArrayHelper::merge($baseConfig, $installedModuleConfig);
+            $config = $this->loadBaseConfig($files);
+            return $this->loadInstalledComponentsConfig($config);
         });
     }
 
@@ -211,41 +210,15 @@ class Configurator
     }
 
     /**
-     * Load a base configuration of installed modules.
+     * Load a configuration of installed components.
+     * @param  array $config
      * @return array
      */
-    protected function loadInstalledModuleConfig(array $baseConfig) : array
+    protected function loadInstalledComponentsConfig(array $config = []) : array
     {
-        $config = [];
         $env    = $this->env === self::WEB ? 'web' : 'console';
-
-        $mainFiles = FileHelper::findExtensionsFiles('config/main.php');
-        $envFiles  = FileHelper::findExtensionsFiles("config/{$env}.php");
-
-        foreach ($mainFiles as $mainFile) {
-            $config = ArrayHelper::merge($config, (array) require $mainFile);
-        }
-        foreach ($envFiles as $envFile) {
-            $config = ArrayHelper::merge($config, (array) require $envFile);
-        }
-
-        /*$appPath            = defined('APP_DIR') ? APP_DIR : ROOT_DIR . '/applications/master';
-        $installedPath      = $appPath . '/config/modules' . ($this->env === self::WEB ? '' : '/console');
-        $installedLocalPath = $installedPath . '/local';
-        $modulesPath        = ROOT_DIR . '/common/modules';
-        foreach (new \GlobIterator($installedPath . '/*.php') as $item) {
-            $name = $item->getBaseName('.php');
-            if (!is_dir($modulesPath . '/' . $name)) {
-                continue;
-            }
-            $module = require $item->getRealPath();
-            $local  = new \SplFileInfo($installedLocalPath . '/' . $item->getFileName());
-            if ($local->isFile()) {
-                $module = ArrayHelper::merge($module, (array) require $local->getRealPath());
-            }
-            $config = ArrayHelper::merge($config, $module);
-        }*/
-
+        $config = FileHelper::loadExtensionsFiles('config/main.php',   $config);
+        $config = FileHelper::loadExtensionsFiles("config/{$env}.php", $config);
         return $config;
     }
 
