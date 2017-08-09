@@ -185,27 +185,39 @@ class Configurator
     protected function loadStorageConfig() : void
     {
         $this->getStorage()->existsOrSet('domain', function ($cache){
-            return (new Query())->select('*')
-                ->from(Domain::tableName())
-                ->indexBy('domain')
-                ->all($this->getDb());
+            try {
+                return (new Query())->select('*')
+                    ->from(Domain::tableName())
+                    ->indexBy('domain')
+                    ->all($this->getDb());
+            } catch (\yii\db\Exception $exception) {
+               return [];
+            }
         });
         $this->getStorage()->existsOrSet('language', function ($cache){
-            return (new Query())->select('*')
-                ->from(Language::tableName())
-                ->indexBy('slug')
-                ->all($this->getDb());
+            try {
+                return (new Query())->select('*')
+                    ->from(Language::tableName())
+                    ->indexBy('slug')
+                    ->all($this->getDb());
+            } catch (\yii\db\Exception $exception) {
+                return [];
+            }
         });
         $this->getStorage()->existsOrSet('component', function ($cache){
-            $config = [];
-            $query  = (new Query())->select('*')
-                ->from(Setting::tableName())
-                ->where(['user_id' => null])
-                ->all($this->getDb());
-            foreach ($query as $row) {
-                $config[$row['name']] = json_decode($row['json_value'], true);
+            try {
+                $config = [];
+                $query  = (new Query())->select('*')
+                    ->from(Setting::tableName())
+                    ->where(['user_id' => null])
+                    ->all($this->getDb());
+                foreach ($query as $row) {
+                    $config[$row['name']] = json_decode($row['json_value'], true);
+                }
+                return $config;
+            } catch (\yii\db\Exception $exception) {
+                return [];
             }
-            return $config;
         });
     }
 
