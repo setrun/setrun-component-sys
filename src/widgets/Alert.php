@@ -85,7 +85,7 @@ class Alert extends Widget
                     $this->options['class'] = $this->alertTypes[$type]['class'] . $appendCss;
                     $this->options['id'] = $this->getId() . '-' . $type;
                     echo BootstrapAlert::widget([
-                        'body' => $this->alertTypes[$type]['icon'] . $message,
+                        'body' => $this->alertTypes[$type]['icon'] . ' ' . $message,
                         'closeButton' => $this->closeButton,
                         'options' => $this->options,
                     ]);

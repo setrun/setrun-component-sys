@@ -9,8 +9,8 @@ return [
     'bootstrap' => ['queue'],
     'components' => [
         'queue' => [
-            'class'  => \yii\queue\db\Queue::class,
-            'mutex'  => \yii\mutex\MysqlMutex::class,
+            'class'  => \yii\queue\file\Queue::class,
+            'path' => '@runtime/queue',
             'as log' => \yii\queue\LogBehavior::class
         ],
         'config' => [

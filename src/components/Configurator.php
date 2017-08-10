@@ -204,7 +204,7 @@ class Configurator
                 return [];
             }
         });
-        $this->getStorage()->existsOrSet('component', function ($cache){
+        $this->getStorage()->existsOrSet(self::COMPONENT, function ($cache){
             try {
                 $config = [];
                 $query  = (new Query())->select('*')

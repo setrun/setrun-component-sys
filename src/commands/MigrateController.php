@@ -9,7 +9,7 @@ namespace setrun\sys\commands;
 
 use Yii;
 use yii\helpers\Console;
-use yii\helpers\FileHelper;
+use setrun\sys\helpers\FileHelper;
 
 /**
  * Manages application migrations.
@@ -20,6 +20,11 @@ class MigrateController extends \yii\console\controllers\MigrateController
      * @var string
      */
     protected $tmpDir = '@runtime/db-migrations';
+
+    /**
+     * @var bool
+     */
+    protected $findGlobal = false;
 
     /**
      * @inheritdoc
