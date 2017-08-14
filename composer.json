@@ -35,6 +35,7 @@
         "paulzi/yii2-nested-sets": "^1.0.4",
         "paulzi/yii2-nested-intervals": "^1.0.5",
         "paulzi/yii2-materialized-path": "^2.0.6",
+        "codemix/yii2-localeurls": "^1.4",
         "webmozart/assert": "^1.2"
     },
     "repositories": [
