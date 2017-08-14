@@ -25,9 +25,11 @@ return [
                     'class'    => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@setrun/sys/messages',
                     'fileMap' => [
-                        'setrun/sys'          => 'sys.php',
-                        'setrun/sys/language' => 'language.php',
-                        'setrun/sys/domain'   => 'domain.php',
+                        'setrun/sys'           => 'sys.php',
+                        'setrun/sys/language'  => 'language.php',
+                        'setrun/sys/domain'    => 'domain.php',
+                        'setrun/sys/setting'   => 'setting.php',
+                        'setrun/sys/component' => 'component.php',
 
                     ]
                 ]

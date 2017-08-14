@@ -6,5 +6,5 @@
  */
 
 return [
-    'Domains' => 'Домены'
+    'Settings' => 'Настройки'
 ];

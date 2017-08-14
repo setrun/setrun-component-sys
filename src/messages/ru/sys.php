@@ -6,7 +6,7 @@
  */
 
 return [
-    'Sys'  => 'Система',
+    'System'  => 'Система',
     'Home' => 'Главная',
     'Error' => 'Ошибка',
     'Model not found'  => 'Модель не найдена',
@@ -18,4 +18,5 @@ return [
     'Not specified' => 'Не задано',
     'findIdentityByAccessToken is not implemented' => 'Метод авторизации по токену доступа отсутсвует',
     'The requested page does not exist' => 'Запрашиваемая страница не существует',
+    'Are you sure ?' => 'Вы уверены ?'
 ];

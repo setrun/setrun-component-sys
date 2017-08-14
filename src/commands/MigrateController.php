@@ -82,34 +82,12 @@ class MigrateController extends \yii\console\controllers\MigrateController
     }
 
     /**
-     * Find migrations.
+     * Find migrations dirs.
      * @return array
      */
     private function findMigrationDirs() : array
     {
-        $output = [];
-        foreach ($this->findMigrationPossibleDirs() as $migrationPath) {
-            if (is_dir($migrationPath)) {
-                $output[] = $migrationPath;
-            }
-        }
-        return $output;
-    }
-    /**
-     * Find possible migrations.
-     * @return array
-     */
-    private function findMigrationPossibleDirs()
-    {
-        $output = [];
-        foreach (Yii::$app->extensions as $code => $data) {
-            if ($data['alias']) {
-                foreach ($data['alias'] as $code => $path) {
-                    $output[] = $path . '/migrations';
-                }
-            }
-        }
-        return $output;
+        return FileHelper::findExtensionsFiles('migrations');
     }
 
     /**
