@@ -48,13 +48,13 @@ class Setting extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('setrun\sys\setting', 'ID'),
-            'user_id'    => Yii::t('setrun\sys\setting', 'User ID'),
-            'did'        => Yii::t('setrun\sys\setting', 'Did'),
-            'name'       => Yii::t('setrun\sys\setting', 'Name'),
-            'json_value' => Yii::t('setrun\sys\setting', 'Json Value'),
-            'created_at' => Yii::t('setrun\sys\setting', 'Created At'),
-            'updated_at' => Yii::t('setrun\sys\setting', 'Updated At'),
+            'id'         => Yii::t('setrun/sys/setting', 'ID'),
+            'user_id'    => Yii::t('setrun/sys/setting', 'User ID'),
+            'did'        => Yii::t('setrun/sys/setting', 'Did'),
+            'name'       => Yii::t('setrun/sys/setting', 'Name'),
+            'json_value' => Yii::t('setrun/sys/setting', 'Json Value'),
+            'created_at' => Yii::t('setrun/sys/setting', 'Created At'),
+            'updated_at' => Yii::t('setrun/sys/setting', 'Updated At'),
         ];
     }
 

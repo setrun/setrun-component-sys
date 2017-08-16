@@ -54,18 +54,18 @@ class Language extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id'         => Yii::t('setrun\sys\language', 'ID'),
-            'did'        => Yii::t('setrun\sys\language', 'Did'),
-            'slug'       => Yii::t('setrun\sys\language', 'Slug'),
-            'name'       => Yii::t('setrun\sys\language', 'Name'),
-            'locale'     => Yii::t('setrun\sys\language', 'Locale'),
-            'alias'      => Yii::t('setrun\sys\language', 'Alias'),
-            'icon_id'    => Yii::t('setrun\sys\language', 'Icon ID'),
-            'by_default' => Yii::t('setrun\sys\language', 'Default'),
-            'status'     => Yii::t('setrun\sys\language', 'Status'),
-            'position'   => Yii::t('setrun\sys\language', 'Position'),
-            'created_at' => Yii::t('setrun\sys\language', 'Created At'),
-            'updated_at' => Yii::t('setrun\sys\language', 'Updated At'),
+            'id'         => Yii::t('setrun/sys/language', 'ID'),
+            'did'        => Yii::t('setrun/sys/language', 'Did'),
+            'slug'       => Yii::t('setrun/sys/language', 'Slug'),
+            'name'       => Yii::t('setrun/sys/language', 'Name'),
+            'locale'     => Yii::t('setrun/sys/language', 'Locale'),
+            'alias'      => Yii::t('setrun/sys/language', 'Alias'),
+            'icon_id'    => Yii::t('setrun/sys/language', 'Icon ID'),
+            'by_default' => Yii::t('setrun/sys/language', 'Default'),
+            'status'     => Yii::t('setrun/sys/language', 'Status'),
+            'position'   => Yii::t('setrun/sys/language', 'Position'),
+            'created_at' => Yii::t('setrun/sys/language', 'Created At'),
+            'updated_at' => Yii::t('setrun/sys/language', 'Updated At'),
         ];
     }
 

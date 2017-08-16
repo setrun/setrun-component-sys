@@ -6,5 +6,6 @@
  */
 
 return [
-    'Domains' => 'Домены'
+    'Domains' => 'Домены',
+    'Domain is not found' => 'Домен не найден'
 ];

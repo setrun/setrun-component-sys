@@ -18,5 +18,7 @@ return [
     'Not specified' => 'Не задано',
     'findIdentityByAccessToken is not implemented' => 'Метод авторизации по токену доступа отсутсвует',
     'The requested page does not exist' => 'Запрашиваемая страница не существует',
-    'Are you sure ?' => 'Вы уверены ?'
+    'Are you sure ?' => 'Вы уверены ?',
+    'Removing error' => 'Произошла ошибка при удалении',
+    'Saving error' => 'Произошла ошибка при сохранении'
 ];

@@ -30,14 +30,19 @@ class m170807_160040_create_sys_domain_table extends Migration
         }
         $this->createTable($this->table, [
             'id'         => $this->primaryKey(),
-            'domain'     => $this->string(100)->notNull(),
             'name'       => $this->string(100)->notNull(),
+            'alias'      => $this->string(100)->notNull(),
+            'url'        => $this->string(100)->notNull()->unique(),
             'created_at' => $this->integer()->unsigned()->notNull(),
-            'updated_at' => $this->integer()->unsigned()->notNull()
+            'updated_at' => $this->integer()->unsigned()->notNull(),
+            'created_by' => $this->integer()->notNull(),
+            'updated_by' => $this->integer()->notNull(),
+
         ], $tableOptions);
 
-        $this->createIndex('{{%idx-sys_domain-name}}',   $this->table, 'name');
-        $this->createIndex('{{%idx-sys_domain-domain}}', $this->table, 'domain');
+        $this->createIndex('{{%idx-sys_domain-name}}',  $this->table, 'name');
+        $this->createIndex('{{%idx-sys_domain-alias}}', $this->table, 'alias');
+        $this->createIndex('{{%idx-sys_domain-url}}',   $this->table, 'url');
     }
 
     /**

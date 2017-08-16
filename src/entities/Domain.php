@@ -1,19 +1,24 @@
 <?php
 
+/**
+ * @author Denis Utkin <dizirator@gmail.com>
+ * @link   https://github.com/dizirator
+ */
+
 namespace setrun\sys\entities;
 
 use Yii;
-use setrun\sys\entities\queries\DomainQuery;
 
 /**
  * This is the model class for table "{{%sys_domain}}".
- *
- * @property integer $id
- * @property string  $domain
- * @property string  $name
- * @property integer $created_at
- * @property integer $updated_at
- *
+ * @property integer    $id
+ * @property string     $name
+ * @property string     $alias
+ * @property string     $url
+ * @property integer    $created_at
+ * @property integer    $updated_at
+ * @property integer    $created_by
+ * @property integer    $updated_by
  * @property Setting[]  $settings
  * @property Language[] $languages
  */
@@ -30,35 +35,58 @@ class Domain extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function attributeLabels()
     {
         return [
-            [['domain', 'name', 'created_at', 'updated_at'], 'required'],
-            [['created_at', 'updated_at'], 'integer'],
-            [['domain', 'name'], 'string', 'max' => 100],
+            'id'         => Yii::t('setrun/sys/domain', 'ID'),
+            'name'       => Yii::t('setrun/sys/domain', 'Name'),
+            'alias'      => Yii::t('setrun/sys/domain', 'Alias'),
+            'url'        => Yii::t('setrun/sys/domain', 'Url'),
+            'created_at' => Yii::t('setrun/sys/domain', 'Created At'),
+            'updated_at' => Yii::t('setrun/sys/domain', 'Updated At'),
+            'created_by' => Yii::t('setrun/sys/domain', 'Created By'),
+            'updated_by' => Yii::t('setrun/sys/domain', 'Updated By'),
         ];
     }
 
     /**
-     * @inheritdoc
+     * Create domain.
+     * @param $name
+     * @param $alias
+     * @param $url
+     * @return Domain
      */
-    public function attributeLabels()
+    public static function create($name, $alias, $url) : self
     {
-        return [
-            'id'         => Yii::t('setrun\sys\domain', 'ID'),
-            'domain'     => Yii::t('setrun\sys\domain', 'Domain'),
-            'name'       => Yii::t('setrun\sys\domain', 'Name'),
-            'created_at' => Yii::t('setrun\sys\domain', 'Created At'),
-            'updated_at' => Yii::t('setrun\sys\domain', 'Updated At'),
-        ];
+        $self = new static();
+        $self->name  = $name;
+        $self->alias = $alias;
+        $self->url   = $url;
+        $self->created_by = Yii::$app->user->identity->id;
+        $self->updated_by = Yii::$app->user->identity->id;
+        return $self;
+    }
+
+    /**
+     * Update domain.
+     * @param $name
+     * @param $domain
+     * @return void
+     */
+    public function edit($name, $alias, $url): void
+    {
+        $this->name  = $name;
+        $this->alias = $alias;
+        $this->url   = $url;
+        $this->updated_by = Yii::$app->user->identity->id;
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getComponentSettings()
+    public function getSettings()
     {
-        return $this->hasMany(Setting::className(), ['did' => 'id']);
+        return $this->hasMany(Setting::className(), ['domain_id' => 'id']);
     }
 
     /**
@@ -66,15 +94,6 @@ class Domain extends \yii\db\ActiveRecord
      */
     public function getLanguages()
     {
-        return $this->hasMany(Language::className(), ['did' => 'id']);
-    }
-
-    /**
-     * @inheritdoc
-     * @return \setrun\sys\entities\queries\DomainQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new DomainQuery(get_called_class());
+        return $this->hasMany(Language::className(), ['domain_id' => 'id']);
     }
 }
