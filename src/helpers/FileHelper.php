@@ -75,4 +75,17 @@ class FileHelper extends \yii\helpers\FileHelper
         }
         return $config;
     }
+
+    /**
+     * Get a asset url of bundle.
+     * @param  $class
+     * @param  string $path
+     * @return string
+     */
+    public static function getAssetUrl($class, $path = '') : string
+    {
+        return Yii::$app->assetManager->getAssetUrl(
+            Yii::$app->assetManager->getBundle($class), ''
+        ) . $path;
+    }
 }

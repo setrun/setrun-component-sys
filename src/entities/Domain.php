@@ -37,16 +37,7 @@ class Domain extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'id'         => Yii::t('setrun/sys/domain', 'ID'),
-            'name'       => Yii::t('setrun/sys/domain', 'Name'),
-            'alias'      => Yii::t('setrun/sys/domain', 'Alias'),
-            'url'        => Yii::t('setrun/sys/domain', 'Url'),
-            'created_at' => Yii::t('setrun/sys/domain', 'Created At'),
-            'updated_at' => Yii::t('setrun/sys/domain', 'Updated At'),
-            'created_by' => Yii::t('setrun/sys/domain', 'Created By'),
-            'updated_by' => Yii::t('setrun/sys/domain', 'Updated By'),
-        ];
+        return static::getAttributeLabels();
     }
 
     /**
@@ -65,6 +56,23 @@ class Domain extends \yii\db\ActiveRecord
         $self->created_by = Yii::$app->user->identity->id;
         $self->updated_by = Yii::$app->user->identity->id;
         return $self;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAttributeLabels() : array
+    {
+        return [
+            'id'         => Yii::t('setrun/sys/domain', 'ID'),
+            'name'       => Yii::t('setrun/sys/domain', 'Name'),
+            'alias'      => Yii::t('setrun/sys/domain', 'Alias'),
+            'url'        => Yii::t('setrun/sys/domain', 'Url'),
+            'created_at' => Yii::t('setrun/sys/domain', 'Created At'),
+            'updated_at' => Yii::t('setrun/sys/domain', 'Updated At'),
+            'created_by' => Yii::t('setrun/sys/domain', 'Created By'),
+            'updated_by' => Yii::t('setrun/sys/domain', 'Updated By'),
+        ];
     }
 
     /**

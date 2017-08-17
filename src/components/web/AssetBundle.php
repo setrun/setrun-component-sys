@@ -8,6 +8,7 @@
 namespace setrun\sys\components\web;
 
 use Yii;
+use setrun\sys\helpers\FileHelper;
 
 /**
  * AssetBundle represents a collection of asset files, such as CSS, JS, images.
@@ -45,10 +46,9 @@ class AssetBundle extends \yii\web\AssetBundle
     public static function getAssetUrl(string $path = '') : string
     {
         if (static::$assetUrl === null) {
-            static::$assetUrl = Yii::$app->assetManager->getAssetUrl(
-                Yii::$app->assetManager->getBundle(static::className()), ''
-            );
+            static::$assetUrl = FileHelper::getAssetUrl(static::className());
         }
+        ;
         return static::$assetUrl . $path;
     }
 }

@@ -9,7 +9,7 @@ namespace setrun\sys\forms\backend;
 
 use Yii;
 use yii\base\Model;
-use setrun\sys\entities\Domain;
+use setrun\sys\entities\manage\Domain;
 
 /**
  * Class DomainForm.
@@ -36,14 +36,13 @@ class DomainForm extends Model
      */
     public $url;
 
-    public function __construct(Domain $domain = null, $config = [])
+    public function __construct(Domain $model = null, $config = [])
     {
-        if ($domain) {
-            $this->id    = $domain->id;
-            $this->name  = $domain->name;
-            $this->alias = $domain->alias;
-            $this->url   = $domain->url;
-
+        if ($model) {
+            $this->id    = $model->id;
+            $this->name  = $model->name;
+            $this->alias = $model->alias;
+            $this->url   = $model->url;
         }
         parent::__construct($config);
     }
@@ -65,11 +64,6 @@ class DomainForm extends Model
      */
     public function attributeLabels()
     {
-        return [
-            'id'    => 'ID',
-            'name'  => Yii::t('setrun/sys/domain', 'Name'),
-            'alias' => Yii::t('setrun/sys/domain', 'Alias'),
-            'url'   => Yii::t('setrun/sys/domain', 'Url')
-        ];
+       return Domain::getAttributeLabels();
     }
 }

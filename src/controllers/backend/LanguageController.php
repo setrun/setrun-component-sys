@@ -2,12 +2,16 @@
 
 namespace setrun\sys\controllers\backend;
 
+use setrun\sys\exceptions\DomainFormException;
 use Yii;
-use setrun\sys\entities\Language;
-use setrun\sys\forms\search\LanguageSearch;
-use setrun\sys\components\controllers\BackController;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use setrun\sys\services\LanguageService;
+use setrun\sys\entities\manage\Language;
+use setrun\sys\forms\backend\LanguageForm;
+use setrun\sys\forms\backend\search\LanguageSearchForm;
+use setrun\sys\components\controllers\BackController;
+use yii\widgets\ActiveForm;
 
 /**
  * LanguageController implements the CRUD actions for Language model.
@@ -15,18 +19,22 @@ use yii\filters\VerbFilter;
 class LanguageController extends BackController
 {
     /**
-     * @inheritdoc
+     * @var LanguageService
      */
-    public function behaviors()
+    protected $service;
+
+    /**
+     * LanguageController constructor.
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param LanguageService $service
+     * @param array $config
+     */
+    public function __construct($id, $module, LanguageService $service, $config = [])
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
+        $this->service = $service;
+        parent::__construct($id, $module, $config);
+
     }
 
     /**
@@ -35,12 +43,10 @@ class LanguageController extends BackController
      */
     public function actionIndex()
     {
-        $searchModel = new LanguageSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $searchModel  = new LanguageSearchForm();
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'searchModel'  => $searchModel,
+            'dataProvider' => $searchModel->search(),
         ]);
     }
 
@@ -63,34 +69,55 @@ class LanguageController extends BackController
      */
     public function actionCreate()
     {
-        $model = new Language();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $form = new LanguageForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            try {
+                $model = $this->service->create($form);
+                return $this->redirect(['view', 'id' => $model->id]);
+            } catch (\DomainException $e) {
+                Yii::$app->errorHandler->logException($e);
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
         }
+        return $this->render('create', [
+            'model' => $form,
+        ]);
     }
 
     /**
-     * Updates an existing Language model.
+     * Edites an existing Language model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionEdit($id)
     {
         $model = $this->findModel($id);
+        $form  = new LanguageForm($model);
+        if (Yii::$app->request->isAjax) {
+            try {
+                if ($form->load(Yii::$app->request->post()) && $form->validate()){
+                    $this->service->edit($form->id, $form);
+                    $this->output['status'] = 1;
+                } else {
+                    $this->output['errors'] = ActiveForm::validate($form);
+                }
+            } catch (DomainFormException $e) {
+                $result = [];
+                foreach ((array) $e->data as $attribute => $message) {
+                    if ($form->hasProperty($attribute)) {
+                        $result[Html::getInputId($form, $attribute)] = $message;
+                    }
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+                }
+                $this->output['errors'] = $result;
+                Yii::$app->errorHandler->logException($e);
+            }
+            return;
         }
+        return $this->render('edit', [
+            'model' => $form,
+        ]);
     }
 
     /**
@@ -101,8 +128,12 @@ class LanguageController extends BackController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+        try {
+            $this->service->remove($id);
+        } catch (\DomainException $e) {
+            Yii::$app->errorHandler->logException($e);
+            Yii::$app->session->setFlash('error', $e->getMessage());
+        }
         return $this->redirect(['index']);
     }
 

@@ -12,7 +12,7 @@ use setrun\sys\forms\backend\DomainForm;
 use setrun\sys\repositories\DomainRepository;
 
 /**
- * Class PageManageService.
+ * Class DomainService.
  */
 class DomainService
 {
@@ -21,6 +21,9 @@ class DomainService
      */
     protected $repository;
 
+    /**
+     * DomainService constructor.
+     */
     public function __construct(DomainRepository $domainRepository)
     {
         $this->repository = $domainRepository;
@@ -33,13 +36,8 @@ class DomainService
      */
     public function create(DomainForm $form): Domain
     {
-        $domain = Domain::create(
-            $form->name,
-            $form->alias,
-            $form->url
-
-        );
-        $this->repository->save($domain);
+        $model = Domain::create($form->name, $form->alias, $form->url);
+        $this->repository->save($model);
         return $domain;
     }
 
@@ -51,13 +49,9 @@ class DomainService
      */
     public function edit($id, DomainForm $form): void
     {
-        $domain = $this->repository->get($id);
-        $domain->edit(
-            $form->name,
-            $form->alias,
-            $form->url
-        );
-        $this->repository->save($domain);
+        $model = $this->repository->get($id);
+        $model->edit($form->name, $form->alias, $form->url);
+        $this->repository->save($model);
     }
 
     /**
@@ -67,7 +61,7 @@ class DomainService
      */
     public function remove($id): void
     {
-        $domain = $this->repository->get($id);
-        $this->repository->remove($domain);
+        $model = $this->repository->get($id);
+        $this->repository->remove($model);
     }
 }

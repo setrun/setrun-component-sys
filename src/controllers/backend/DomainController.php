@@ -40,10 +40,9 @@ class DomainController extends BackController
     public function actionIndex()
     {
         $searchModel  = new DomainSearchForm();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         return $this->render('index', [
             'searchModel'  => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $searchModel->search(),
         ]);
     }
 
@@ -69,8 +68,8 @@ class DomainController extends BackController
         $form = new DomainForm();
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
-                $domain = $this->service->create($form);
-                return $this->redirect(['view', 'id' => $domain->id]);
+                $model = $this->service->create($form);
+                return $this->redirect(['view', 'id' => $model->id]);
             } catch (\DomainException $e) {
                 Yii::$app->errorHandler->logException($e);
                 Yii::$app->session->setFlash('error', $e->getMessage());
@@ -89,8 +88,8 @@ class DomainController extends BackController
      */
     public function actionEdit($id)
     {
-        $domain = $this->findModel($id);
-        $form   = new DomainForm($domain);
+        $model = $this->findModel($id);
+        $form  = new DomainForm($model);
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
             try {
                 $this->service->edit($form->id, $form);

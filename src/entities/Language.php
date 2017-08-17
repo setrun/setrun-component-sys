@@ -3,13 +3,14 @@
 namespace setrun\sys\entities;
 
 use Yii;
+use setrun\sys\helpers\ArrayHelper;
 use setrun\sys\entities\queries\LanguageQuery;
 
 /**
  * This is the model class for table "{{%sys_language}}".
  *
  * @property integer $id
- * @property integer $did
+ * @property integer $domain_id
  * @property string  $slug
  * @property string  $name
  * @property string  $locale
@@ -25,6 +26,9 @@ use setrun\sys\entities\queries\LanguageQuery;
  */
 class Language extends \yii\db\ActiveRecord
 {
+    public const STATUS_DRAFT  = 0;
+    public const STATUS_ACTIVE = 1;
+
     /**
      * @inheritdoc
      */
@@ -34,18 +38,44 @@ class Language extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * Create a new language.
+     * @param $name
+     * @param $slug
+     * @param $locale
+     * @param $alias
+     * @param $icon_id
+     * @param $status
+     * @return Language
      */
-    public function rules()
+    public static function create($name, $slug, $locale, $alias, $icon_id, $status) : self
     {
-        return [
-            [['did', 'bydefault', 'status', 'position', 'created_at', 'updated_at'], 'integer'],
-            [['slug', 'name', 'locale', 'alias', 'created_at', 'updated_at'], 'required'],
-            [['slug', 'name', 'alias'], 'string', 'max' => 50],
-            [['locale'], 'string', 'max' => 255],
-            [['icon_id'], 'string', 'max' => 10],
-            [['did'], 'exist', 'skipOnError' => true, 'targetClass' => Domain::className(), 'targetAttribute' => ['did' => 'id']],
-        ];
+        $self = new static();
+        $self->name    = $name;
+        $self->slug    = $slug;
+        $self->locale  = $locale;
+        $self->alias   = $alias;
+        $self->icon_id = $icon_id;
+        $self->status  = $status;
+        return $self;
+    }
+
+    /**
+     * Edit a language.
+     * @param $name
+     * @param $slug
+     * @param $locale
+     * @param $alias
+     * @param $icon_id
+     * @param $status
+     */
+    public function edit($name, $slug, $locale, $alias, $icon_id, $status): void
+    {
+        $this->name    = $name;
+        $this->slug    = $slug;
+        $this->locale  = $locale;
+        $this->alias   = $alias;
+        $this->icon_id = $icon_id;
+        $this->status  = $status;
     }
 
     /**
@@ -53,15 +83,23 @@ class Language extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
+        return static::getAttributeLabels();
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAttributeLabels() : array
+    {
         return [
             'id'         => Yii::t('setrun/sys/language', 'ID'),
-            'did'        => Yii::t('setrun/sys/language', 'Did'),
+            'domain_id'  => Yii::t('setrun/sys/language', 'Domain'),
             'slug'       => Yii::t('setrun/sys/language', 'Slug'),
             'name'       => Yii::t('setrun/sys/language', 'Name'),
             'locale'     => Yii::t('setrun/sys/language', 'Locale'),
             'alias'      => Yii::t('setrun/sys/language', 'Alias'),
-            'icon_id'    => Yii::t('setrun/sys/language', 'Icon ID'),
-            'by_default' => Yii::t('setrun/sys/language', 'Default'),
+            'icon_id'    => Yii::t('setrun/sys/language', 'Icon'),
+            'bydefault'  => Yii::t('setrun/sys/language', 'Default'),
             'status'     => Yii::t('setrun/sys/language', 'Status'),
             'position'   => Yii::t('setrun/sys/language', 'Position'),
             'created_at' => Yii::t('setrun/sys/language', 'Created At'),
@@ -70,19 +108,23 @@ class Language extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * Get all statuses.
+     * @return array
      */
-    public function getD()
+    public static function getStatuses() : array
     {
-        return $this->hasOne(Domain::className(), ['id' => 'did']);
+        return [
+            self::STATUS_ACTIVE => Yii::t('setrun/sys/language', 'Active'),
+            self::STATUS_DRAFT  => Yii::t('setrun/sys/language', 'Draft')
+        ];
     }
 
     /**
-     * @inheritdoc
-     * @return LanguageQuery the active query used by this AR class.
+     * Get the status of the name.
+     * @return string
      */
-    public static function find()
+    public function getStatusName() : string
     {
-        return new LanguageQuery(get_called_class());
+        return ArrayHelper::get(self::getStatuses(), $this->status);
     }
 }

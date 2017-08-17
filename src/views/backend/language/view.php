@@ -4,43 +4,59 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model setrun\sys\entities\Language */
+/* @var $model setrun\sys\entities\manage\Domain */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('setrun/sys/language', 'Languages'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = $model->name;
 ?>
-<div class="language-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a(Yii::t('setrun/sys/language', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a(Yii::t('setrun/sys/language', 'Delete'), ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => Yii::t('setrun/sys/language', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id',
-            'domain_id',
-            'slug',
-            'name',
-            'locale',
-            'alias',
-            'icon_id',
-            'bydefault',
-            'status',
-            'position',
-            'created_at',
-            'updated_at',
-        ],
-    ]) ?>
-
+<div class="domain-view">
+    <div class="box">
+        <div class="box-body">
+            <p class="pull-right">
+                <?= Html::a('<i class="fa fa-pencil"></i> ' . Yii::t('setrun/backend', 'Edit'),   ['edit',  'id' => $model->id], ['class' => 'btn btn-default']) ?>
+                <?= Html::a('<i class="fa fa-trash"></i> ' . Yii::t('setrun/backend', 'Delete'),  ['delete','id' => $model->id], [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => Yii::t('setrun/backend', 'Do you want to delete ?'),
+                        'method' => 'post',
+                    ],
+                ]) ?>
+            </p>
+            <div class="clearfix"></div>
+            <hr/>
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    'id',
+                    'name',
+                    'slug',
+                    'locale',
+                    'alias',
+                    'icon_id' => [
+                        'attribute' => 'icon_id',
+                        'format'    => 'raw',
+                        'value' => function($model, $index){
+                            $src = \setrun\sys\helpers\LanguageHelper::getIconUrl($model->icon_id);
+                            return '<img width="25" src=" ' . $src .'" />';
+                        }
+                    ],
+                    'created_at' => [
+                        'attribute' => 'created_at',
+                        'format'    => 'raw',
+                        'value' => function($model, $index){
+                            return  Yii::$app->formatter->asDate($model->created_at, 'long') . ' [<i>' . $model->getTimeAgo('created_at') . '</i>]';
+                        }
+                    ],
+                    'updated_at' => [
+                        'attribute' => 'updated_at',
+                        'format'    => 'raw',
+                        'value' => function($model, $index){
+                            return  Yii::$app->formatter->asDate($model->updated_at, 'long') . ' [<i>' . $model->getTimeAgo('updated_at') . '</i>]';
+                        }
+                    ]
+                ],
+            ]) ?>
+        </div>
+    </div>
 </div>

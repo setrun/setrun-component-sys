@@ -8,15 +8,12 @@
 namespace setrun\sys\forms\backend\search;
 
 use Yii;
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use setrun\sys\entities\manage\Domain;
-use setrun\sys\behaviors\TimeAgoBehavior;
+use setrun\sys\components\models\BaseSearchModel;
 
 /**
  * DomainSearch represents the model behind the search form about `setrun\sys\entities\Domain`.
  */
-class DomainSearchForm extends Model
+class DomainSearchForm extends BaseSearchModel
 {
     /**
      * @var string
@@ -39,6 +36,11 @@ class DomainSearchForm extends Model
     public $updated_at;
 
     /**
+     * @var string
+     */
+    protected $modelClass = 'setrun\sys\entities\manage\Domain';
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -54,41 +56,14 @@ class DomainSearchForm extends Model
      * @param array $params
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function buildFilter(&$query)
     {
-        $query = Domain::find();
-
-        // add conditions that should always apply here
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            $query->where('0=1');
-            return $dataProvider;
-        }
-
-        if (!is_null($this->updated_at) && strpos($this->updated_at, ' - ') !== false ) {
-            list($start_date, $end_date) = explode(' - ', $this->updated_at);
-            $query->andFilterWhere(['>=', 'updated_at', (int)strtotime($start_date)]);
-            $query->andFilterWhere(['<=', 'updated_at', (int)strtotime($end_date) + 24 * 3600]);
-        }
+        $this->filterTimestamp($query, 'updated_at');
 
         $query->andFilterWhere([
             'id' => $this->id,
         ]);
-
         $query->andFilterWhere(['like', 'name',  $this->name])
               ->andFilterWhere(['like', 'url',   $this->url]);
-
-        return $dataProvider;
-    }
-
-    public function formName()
-    {
-        return 'search';
     }
 }

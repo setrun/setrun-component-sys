@@ -7,14 +7,14 @@
 
 namespace setrun\sys\repositories;
 
-use setrun\sys\entities\manage\Domain;
+use setrun\sys\entities\manage\Language;
 use setrun\sys\interfaces\i18nInterface;
 use setrun\sys\exceptions\NotFoundException;
 
 /**
- * Class DomainRepository.
+ * Class LanguageRepository.
  */
-class DomainRepository
+class LanguageRepository
 {
     /**
     * @var i18nInterface
@@ -27,24 +27,24 @@ class DomainRepository
     }
 
     /**
-     * Find a domain item.
+     * Find a language item.
      * @param $id
-     * @return Domain
+     * @return Language
      */
-    public function get($id): Domain
+    public function get($id): Language
     {
-        if (!$model = Domain::findOne($id)) {
-            throw new NotFoundException($this->i18n->t('setrun/sys/domain', 'Domain is not found'));
+        if (!$model = Language::findOne($id)) {
+            throw new NotFoundException($this->i18n->t('setrun/sys/language', 'Language is not found'));
         }
         return $model;
     }
 
     /**
-     * Save a domain item.
-     * @param Domain $model
+     * Save a language item.
+     * @param Language $model
      * @return void
      */
-    public function save(Domain $model): void
+    public function save(Language $model): void
     {
         if (!$model->save()) {
             throw new \RuntimeException($this->i18n->t('setrun/sys', 'Saving error'));
@@ -52,11 +52,11 @@ class DomainRepository
     }
 
     /**
-     * Remove a domain item.
-     * @param Domain $model
+     * Remove a language item.
+     * @param Language $model
      * @return void
      */
-    public function remove(Domain $model): void
+    public function remove(Language $model): void
     {
         if (!$model->delete()) {
             throw new \RuntimeException($this->i18n->t('setrun/sys', 'Removing error'));
