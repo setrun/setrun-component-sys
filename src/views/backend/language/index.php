@@ -31,6 +31,10 @@ LanguageAsset::register($this, [
                 <a href="<?= Url::to(['create']) ?>" class="btn btn-success">
                     <i class="fa fa-fw fa-plus"></i> <?= Yii::t('setrun/sys/language', 'Create Language') ?>
                 </a>
+                <a href="javascript:void(0)" class="btn btn-info" id="clear-filter">
+                    <?= Icon::show('times', [], Icon::FA) ?>
+                    <?= Yii::t('setrun/backend', 'Clear filters') ?>
+                </a>
             </p>
             <hr />
 
