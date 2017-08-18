@@ -25,6 +25,11 @@ class Theme extends \yii\base\Theme
     public $distDir = 'assets/dist';
 
     /**
+     * @var string
+     */
+    public $themeAsset;
+
+    /**
      * @inheritdoc
      */
     public function applyTo($path)

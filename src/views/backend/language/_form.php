@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\icons\Icon;
 use kartik\form\ActiveForm;
+use setrun\sys\entities\Language;
 use setrun\sys\helpers\FileHelper;
 use setrun\sys\helpers\LanguageHelper;
 use setrun\sys\assets\backend\LanguageAsset;
@@ -10,21 +11,33 @@ use setrun\sys\assets\backend\LanguageAsset;
 /* @var $this  yii\web\View */
 /* @var $model setrun\sys\entities\manage\Language */
 /* @var $form  yii\widgets\ActiveForm */
+/* @var $side  string */
 
-LanguageAsset::register($this, ['js/language/form.js', 'css/language/form.css']);
 Icon::map($this, Icon::FI);
+LanguageAsset::register($this, [
+    'js/language/form.js',
+    'css/language/form.css'
+]);
 ?>
 
 <div class="language-form">
     <?php $form = ActiveForm::begin([
         'type' => ActiveForm::TYPE_HORIZONTAL,
-        'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_SMALL]
+        'formConfig' => [
+            'labelSpan'  => 2,
+            'deviceSize' => ActiveForm::SIZE_SMALL
+        ],
+        'options' => [
+            'class' => 'form'
+        ]
     ]); ?>
     <div class="clearfix"></div>
     <div class="box">
         <div class="box-body">
             <p class="pull-right">
-                <?= Html::submitButton('<i class="fa fa-check"></i> ' . Yii::t('setrun/backend', 'Save'), ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton(
+                        '<i class="fa fa-check"></i> ' . Yii::t('setrun/backend', 'Save'),
+                        ['class' => 'btn btn-primary ' . ($side == 'edit' ? 'submit-ajax' : '')]) ?>
             </p>
             <div class="clearfix"></div>
             <hr/>
@@ -36,12 +49,14 @@ Icon::map($this, Icon::FI);
 
             <?= $form->field($model, 'locale')->textInput(['maxlength' => true]) ?>
 
-            <div class="form-group field-language-icon" style="margin-bottom: 15px">
-                <label class="control-label col-sm-2" for="language-icon_id"><?= $model->getAttributeLabel('icon_id') ?></label>
+            <div class="form-group field-languageform-icon" style="margin-bottom: 15px">
+                <label class="col-sm-2 control-label" for="languageform-icon">
+                    <?= $model->getAttributeLabel('icon') ?>
+                </label>
                 <div class="col-sm-10">
-                    <select id="language-icon" class="form-control" name="LanguageForm[icon_id]">
+                    <select id="languageform-icon" class="form-control" name="LanguageForm[icon]">
                         <?php foreach (LanguageHelper::getCountries() as $code => $country) : ?>
-                            <option <?php if ($model->icon_id === strtolower($code)) : ?> selected="selected" <?php endif; ?>
+                            <option <?php if ($model->icon == strtolower($code)) : ?> selected="selected" <?php endif; ?>
                                     data-img-src="<?= LanguageHelper::getIconUrl($code) ?>"
                                     value="<?= strtolower($code) ?>"><?= $country ?>
                             </option>
@@ -50,14 +65,13 @@ Icon::map($this, Icon::FI);
                 </div>
             </div>
 
-            <?= $form->field($model, 'status')->radioButtonGroup(\setrun\sys\entities\Language::getStatuses(), [
+            <?= $form->field($model, 'status')->radioButtonGroup(Language::getStatuses(), [
                 'itemOptions' => [
                     'labelOptions' => [
                             'class' => 'btn btn-dark'
                     ]
                 ]
             ]);?>
-
 
         </div>
     </div>

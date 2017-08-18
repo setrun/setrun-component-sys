@@ -8,13 +8,13 @@
 namespace setrun\sys\forms\backend;
 
 use Yii;
-use yii\base\Model;
+use setrun\sys\components\base\Form;
 use setrun\sys\entities\manage\Language;
 
 /**
  * Class LanguageForm.
  */
-class LanguageForm extends Model
+class LanguageForm extends Form
 {
     /**
      * @var mixed
@@ -44,12 +44,17 @@ class LanguageForm extends Model
     /**
      * @var string
      */
-    public $icon_id;
+    public $icon;
 
     /**
      * @var string
      */
     public $status;
+
+    /**
+     * @var Language
+     */
+    private $_model;
 
     /**
      * LanguageForm constructor.
@@ -63,12 +68,13 @@ class LanguageForm extends Model
             $this->name    = $model->name;
             $this->alias   = $model->alias;
             $this->slug    = $model->slug;
-            $this->icon_id = $model->icon_id;
+            $this->icon    = $model->icon;
             $this->locale  = $model->locale;
             $this->status  = $model->status;
         } else {
             $this->status = Language::STATUS_ACTIVE;
         }
+        $this->_model = $model;
         parent::__construct($config);
     }
 
@@ -82,7 +88,8 @@ class LanguageForm extends Model
             [['status'], 'integer'],
             [['slug', 'name', 'alias'], 'string', 'max' => 50],
             [['locale'],  'string', 'max' => 255],
-            [['icon_id'], 'string', 'max' => 10],
+            [['icon'], 'string', 'max' => 10],
+            [['slug'], 'unique', 'targetClass' => Language::class, 'filter' => $this->_model ? ['<>', 'slug', $this->_model->slug] : null]
         ];
     }
 

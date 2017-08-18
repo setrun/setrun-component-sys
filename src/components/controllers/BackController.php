@@ -7,6 +7,7 @@
 
 namespace setrun\sys\components\controllers;
 
+use themes\backend\imperial\assets\ThemeAsset;
 use Yii;
 use setrun\sys\Module;
 use yii\filters\VerbFilter;
@@ -54,6 +55,7 @@ class BackController extends BaseController
     public function init()
     {
         $this->view->theme->setBasePath('@themes/backend/imperial');
+        $this->view->theme->themeAsset = 'themes\backend\imperial\assets\ThemeAsset';
         Yii::$app->assetManager->forceCopy = true;
         parent::init();
     }

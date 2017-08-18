@@ -3,13 +3,9 @@
 
     Component.autoload = true;
 
-    Component.handlers = {
-
-    };
-
     Component.init = function () {
-        $('#language-icon').chosen('destroy');
-        $('#language-icon').chosenImage({
+        $('#languageform-icon').chosen('destroy');
+        $('#languageform-icon').chosenImage({
             placeholder_text_single:   ' ',
             placeholder_text_multiple: ' ',
         });

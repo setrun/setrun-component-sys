@@ -8,12 +8,12 @@
 namespace setrun\sys\forms\backend\search;
 
 use Yii;
-use setrun\sys\components\models\BaseSearchModel;
+use setrun\sys\components\base\SearchForm;
 
 /**
  * LanguageSearchForm represents the model behind the search form about `setrun\sys\entities\manage\Language`.
  */
-class LanguageSearchForm extends BaseSearchModel
+class LanguageSearchForm extends SearchForm
 {
     /**
      * @var string
@@ -29,11 +29,6 @@ class LanguageSearchForm extends BaseSearchModel
      * @var string
      */
     public $slug;
-
-    /**
-     * @var string
-     */
-    public $bydefault;
 
     /**
      * @var string
@@ -74,9 +69,8 @@ class LanguageSearchForm extends BaseSearchModel
         $this->filterTimestamp($query, 'updated_at');
 
         $query->andFilterWhere([
-            'id'        => $this->id,
-            'status'    => $this->status,
-            'bydefault' => $this->bydefault
+            'id'     => $this->id,
+            'status' => $this->status
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);

@@ -1,10 +1,10 @@
-.field-language-icon .chosen-results li{
+.field-languageform-icon .chosen-results li{
     background-size: contain !important;
     background-position: 0% !important;
     background-repeat: no-repeat !important;
     padding-left: 40px !important;
     margin-top: 5px!important;
 }
-.field-language-icon .chosen-single span {
+.field-languageform-icon .chosen-single span {
     background-position: 0% 40% !important;
 }

@@ -23,6 +23,6 @@ class LanguageAsset extends AssetBundle
      * @inheritdoc
      */
     public $depends = [
-        'setrun\sys\assets\SysAsset'
+        '@themeAsset'
     ];
 }

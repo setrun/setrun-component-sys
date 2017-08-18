@@ -13,5 +13,6 @@ $this->params['breadcrumbs'][] = Yii::t('setrun/sys/language', 'Edit');
 <div class="language-edit">
     <?= $this->render('_form', [
         'model' => $model,
+        'side'  => 'edit'
     ]) ?>
 </div>

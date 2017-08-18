@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use setrun\sys\helpers\LanguageHelper;
 
 /* @var $this yii\web\View */
 /* @var $model setrun\sys\entities\manage\Domain */
@@ -19,7 +20,7 @@ $this->params['breadcrumbs'][] = $model->name;
                     'class' => 'btn btn-danger',
                     'data' => [
                         'confirm' => Yii::t('setrun/backend', 'Do you want to delete ?'),
-                        'method' => 'post',
+                        'method'  => 'post',
                     ],
                 ]) ?>
             </p>
@@ -33,11 +34,12 @@ $this->params['breadcrumbs'][] = $model->name;
                     'slug',
                     'locale',
                     'alias',
-                    'icon_id' => [
-                        'attribute' => 'icon_id',
+                    'status',
+                    'icon' => [
+                        'attribute' => 'icon',
                         'format'    => 'raw',
                         'value' => function($model, $index){
-                            $src = \setrun\sys\helpers\LanguageHelper::getIconUrl($model->icon_id);
+                            $src = LanguageHelper::getIconUrl($model->icon);
                             return '<img width="25" src=" ' . $src .'" />';
                         }
                     ],

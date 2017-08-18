@@ -5,19 +5,18 @@
  * @link   https://github.com/dizirator
  */
 
-namespace setrun\sys\components\models;
+namespace setrun\sys\components\base;
 
 use Yii;
-use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
 use setrun\sys\helpers\ArrayHelper;
 use yii\base\InvalidConfigException;
 
 /**
- * Class BaseSearchModel.
+ * Class SearchForm.
  */
-abstract class BaseSearchModel extends Model
+abstract class SearchForm extends Form
 {
     /**
      * @var string
@@ -181,6 +180,7 @@ abstract class BaseSearchModel extends Model
             return $dataProvider;
         }
         $this->buildFilter($query);
+
         return $dataProvider;
     }
 

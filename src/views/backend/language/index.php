@@ -7,8 +7,9 @@ use kartik\icons\Icon;
 use yii\grid\GridView;
 use kartik\editable\Editable;
 use kartik\daterange\DateRangePicker;
-use kotchuprik\sortable\assets\SortableAsset;
 use setrun\sys\entities\manage\Language;
+use setrun\sys\assets\backend\LanguageAsset;
+use kotchuprik\sortable\assets\SortableAsset;
 
 /* @var $this         yii\web\View */
 /* @var $searchModel  setrun\sys\forms\backend\search\LanguageSearchForm */
@@ -16,8 +17,12 @@ use setrun\sys\entities\manage\Language;
 
 $this->title = Yii::t('setrun/sys/language', 'Languages');
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['pjaxID']        = 'language-index';
 
 Icon::map($this, Icon::FI);
+LanguageAsset::register($this, [
+    'js/language/index.js'
+]);
 ?>
 <div class="language-index">
     <div class="box">
@@ -28,6 +33,13 @@ Icon::map($this, Icon::FI);
                 </a>
             </p>
             <hr />
+
+            <?php Pjax::begin([
+                    'id'      => $this->params['pjaxID'],
+                    'timeout' => 3000
+            ]);
+            if (isset($_GET['_pjax'])) $_GET['_pjax'] = ''; ?>
+
             <?php
                 SortableAsset::register($this);
                 $this->registerJs('initSortableWidgets();', \yii\web\View::POS_READY, 'sortable');
@@ -51,12 +63,12 @@ Icon::map($this, Icon::FI);
                     [
                         'class' => 'yii\grid\CheckboxColumn'
                     ],
-                    'icon_id' => [
-                        'attribute' => 'icon_id',
+                    'icon' => [
+                        'attribute' => 'icon',
                         'label' => '',
                         'format'    => 'raw',
                         'value'     => function($model, $index, $key){
-                            return Icon::show($model->icon_id, [], Icon::FI);
+                            return Icon::show($model->icon, [], Icon::FI);
                         },
                         'headerOptions' => [ 'style' => 'width: 5%']
                     ],
@@ -91,29 +103,41 @@ Icon::map($this, Icon::FI);
                     'status' => [
                         'attribute' => 'status',
                         'filter'    => Language::getStatuses(),
+                        'filterInputOptions' => [
+                            'prompt'  => '&nbsp;',
+                            'encode'  => false
+                        ],
                         'format'    => 'raw',
                         'value'     => function($model, $index, $key){
                             $checked = (int)$model->status === 1 ? 'checked' : '';
-                            $html    = "<input type=\"checkbox\" class=\"switcher switcher_default\" {$checked} data-id=\"{$model->id}\" id=\"switcher_status_{$model->id}\" />";
+                            $html    = "<input type=\"checkbox\" class=\"switcher switcher_status\" {$checked} data-id=\"{$model->id}\" data-url=\"" . Url::to(['status', 'id' => $model->id]) ."\"  id=\"switcher_status_{$model->id}\" />";
                             $html   .= "<label class='switcher_label' for=\"switcher_status_{$model->id}\"></label>";
                             return $html;
                         },
                     ],
-                    'bydefault' => [
-                        'attribute'=> 'bydefault',
+                    'is_default' => [
+                        'attribute'=> 'is_default',
                         'format'    => 'raw',
                         'value'     => function($model, $index, $key){
-                            $checked = (int)$model->bydefault === 1 ? 'checked' : '';
-                            $html    = "<input type=\"checkbox\" class=\"switcher switcher_default\" {$checked} data-id=\"{$model->id}\" id=\"switcher_default_{$model->id}\" />";
+                            $checked = $model->is_default == 1 ? 'checked' : '';
+                            $html    = "<input type=\"checkbox\" class=\"switcher switcher_default\" {$checked} data-id=\"{$model->id}\" data-url=\"" . Url::to(['default', 'id' => $model->id]) ."\" id=\"switcher_default_{$model->id}\" />";
                             $html   .= "<label class='switcher_label' for=\"switcher_default_{$model->id}\"></label>";
                             return $html;
                         },
                     ],
                     [
-                        'class' => 'setrun\backend\components\grid\ActionColumn'
+                        'class' => 'setrun\backend\components\grid\ActionColumn',
+                        'template' =>'{sort} {edit} {view}  {delete}',
+                        'buttons'  =>[
+                            'sort' => function ($url, $model, $key) {
+                                return '<div class="sortable-widget-handler btn btn-xs btn-default" data-id="'.$model->id.'">☰</div>';
+                            },
+
+                        ],
                     ],
                 ],
             ]); ?>
+            <?php Pjax::end(); ?>
         </div>
     </div>
 </div>

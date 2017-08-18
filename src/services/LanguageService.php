@@ -7,10 +7,10 @@
 
 namespace setrun\sys\services;
 
+use setrun\sys\exceptions\YiiException;
 use setrun\sys\entities\manage\Language;
 use setrun\sys\forms\backend\LanguageForm;
 use setrun\sys\repositories\LanguageRepository;
-use setrun\sys\exceptions\DomainFormException;
 
 /**
  * Class LanguageService.
@@ -42,7 +42,7 @@ class LanguageService
             $form->slug,
             $form->locale,
             $form->alias,
-            $form->icon_id,
+            $form->icon,
             $form->status
         );
         $this->repository->save($model);
@@ -63,10 +63,10 @@ class LanguageService
             $form->slug,
             $form->locale,
             $form->alias,
-            $form->icon_id,
+            $form->icon,
             $form->status
         );
-        $this->assertIsNotDefault($model);
+        $this->assertIsNotDefaultDraft($model);
         $this->repository->save($model);
     }
 
@@ -78,7 +78,37 @@ class LanguageService
     public function remove($id): void
     {
         $model = $this->repository->get($id);
+        $this->assertIsNotDefault($model);
         $this->repository->remove($model);
+    }
+
+    public function default($id) : void
+    {
+        $model = $this->repository->get($id);
+        $this->assertIsNotDraft($model);
+        $model->default();
+        $this->repository->save($model);
+    }
+
+    public function status($id, $status) : void
+    {
+        $model = $this->repository->get($id);
+        $this->assertIsStatusExists($status);
+        $model->status($status);
+        $this->assertIsNotDefaultDraft($model);
+        $this->repository->save($model);
+    }
+
+    /**
+     * @param Language $model
+     */
+    private function assertIsNotDefaultDraft(Language $model): void
+    {
+        if ($model->status == Language::STATUS_DRAFT && $model->is_default == 1) {
+            throw new YiiException([
+                'status' => 'Unable to manage the default language is status draft'
+            ]);
+        }
     }
 
     /**
@@ -86,8 +116,34 @@ class LanguageService
      */
     private function assertIsNotDefault(Language $model): void
     {
-        if ($model->status == Language::STATUS_DRAFT && $model->bydefault == 1) {
-            throw new DomainFormException(['status' => 'Unable to manage the default language']);
+        if ($model->is_default == 1) {
+            throw new YiiException([
+                'Unable to remove the default language'
+            ]);
+        }
+    }
+
+    /**
+     * @param Language $model
+     */
+    private function assertIsNotDraft(Language $model): void
+    {
+        if ($model->status == Language::STATUS_DRAFT) {
+            throw new YiiException([
+                'status' => 'Unable to manage the language is status draft'
+            ]);
+        }
+    }
+
+    /**
+     * @param $status
+     */
+    private function assertIsStatusExists($status)
+    {
+        if (!isset(Language::getStatuses()[$status])) {
+            throw new YiiException([
+                'status' => 'Status is not exists'
+            ]);
         }
     }
 }

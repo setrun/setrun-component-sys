@@ -10,13 +10,13 @@ use setrun\sys\entities\queries\LanguageQuery;
  * This is the model class for table "{{%sys_language}}".
  *
  * @property integer $id
- * @property integer $domain_id
  * @property string  $slug
  * @property string  $name
  * @property string  $locale
  * @property string  $alias
- * @property string  $icon_id
- * @property integer $bydefault
+ * @property string  $icon
+ * @property integer $is_default
+ * @property integer $domain_id
  * @property integer $status
  * @property integer $position
  * @property integer $created_at
@@ -39,22 +39,22 @@ class Language extends \yii\db\ActiveRecord
 
     /**
      * Create a new language.
-     * @param $name
-     * @param $slug
-     * @param $locale
-     * @param $alias
-     * @param $icon_id
-     * @param $status
+     * @param  $name
+     * @param  $slug
+     * @param  $locale
+     * @param  $alias
+     * @param  $icon
+     * @param  $status
      * @return Language
      */
-    public static function create($name, $slug, $locale, $alias, $icon_id, $status) : self
+    public static function create($name, $slug, $locale, $alias, $icon, $status) : self
     {
         $self = new static();
         $self->name    = $name;
         $self->slug    = $slug;
         $self->locale  = $locale;
         $self->alias   = $alias;
-        $self->icon_id = $icon_id;
+        $self->icon    = $icon;
         $self->status  = $status;
         return $self;
     }
@@ -65,17 +65,34 @@ class Language extends \yii\db\ActiveRecord
      * @param $slug
      * @param $locale
      * @param $alias
-     * @param $icon_id
+     * @param $icon
      * @param $status
      */
-    public function edit($name, $slug, $locale, $alias, $icon_id, $status): void
+    public function edit($name, $slug, $locale, $alias, $icon, $status): void
     {
         $this->name    = $name;
         $this->slug    = $slug;
         $this->locale  = $locale;
         $this->alias   = $alias;
-        $this->icon_id = $icon_id;
+        $this->icon    = $icon;
         $this->status  = $status;
+    }
+
+    /**
+     *
+     */
+    public function default()
+    {
+        self::updateAll(['is_default' => 0]);
+        $this->is_default = 1;
+    }
+
+    /**
+     *
+     */
+    public function status($status)
+    {
+        $this->status = $status;
     }
 
     /**
@@ -93,13 +110,13 @@ class Language extends \yii\db\ActiveRecord
     {
         return [
             'id'         => Yii::t('setrun/sys/language', 'ID'),
-            'domain_id'  => Yii::t('setrun/sys/language', 'Domain'),
             'slug'       => Yii::t('setrun/sys/language', 'Slug'),
             'name'       => Yii::t('setrun/sys/language', 'Name'),
             'locale'     => Yii::t('setrun/sys/language', 'Locale'),
             'alias'      => Yii::t('setrun/sys/language', 'Alias'),
-            'icon_id'    => Yii::t('setrun/sys/language', 'Icon'),
-            'bydefault'  => Yii::t('setrun/sys/language', 'Default'),
+            'icon'       => Yii::t('setrun/sys/language', 'Icon'),
+            'is_default' => Yii::t('setrun/sys/language', 'Default'),
+            'domain_id'  => Yii::t('setrun/sys/language', 'Domain'),
             'status'     => Yii::t('setrun/sys/language', 'Status'),
             'position'   => Yii::t('setrun/sys/language', 'Position'),
             'created_at' => Yii::t('setrun/sys/language', 'Created At'),

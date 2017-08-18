@@ -21,6 +21,7 @@ class FrontController extends BaseController
     public function init()
     {
         $this->view->theme->setBasePath('@themes/imperial');
+        $this->view->theme->themeAsset = 'themes\imperial\assets\ThemeAsset';
         Yii::$app->assetManager->forceCopy = true;
         parent::init();
     }

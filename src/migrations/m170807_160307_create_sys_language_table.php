@@ -30,17 +30,17 @@ class m170807_160307_create_sys_language_table extends Migration
         }
         $this->createTable($this->table, [
             'id'          => $this->primaryKey(),
-            'domain_id'   => $this->integer()->defaultValue(null),
-            'slug'        => $this->string(50)->notNull(),
+            'slug'        => $this->string(50)->notNull()->unique(),
             'name'        => $this->string(50)->notNull(),
             'locale'      => $this->string(255)->notNull(),
             'alias'       => $this->string(50)->notNull(),
-            'icon_id'     => $this->string(10),
-            'bydefault'   => $this->integer()->notNull()->defaultValue(0),
+            'icon'        => $this->string(10),
             'status'      => $this->smallInteger()->notNull()->defaultValue(1),
+            'domain_id'   => $this->integer()->defaultValue(null),
+            'is_default'  => $this->integer()->notNull()->defaultValue(0),
             'position'    => $this->integer()->notNull()->defaultValue(1),
-            'created_at'  => $this->integer()->notNull(),
-            'updated_at'  => $this->integer()->notNull()
+            'created_at'  => $this->integer()->notNull()->unsigned(),
+            'updated_at'  => $this->integer()->notNull()->unsigned()
         ], $tableOptions);
 
         $this->createIndex('{{%idx-sys_language-name}}',   $this->table, 'name');

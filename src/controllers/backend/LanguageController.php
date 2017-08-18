@@ -2,16 +2,20 @@
 
 namespace setrun\sys\controllers\backend;
 
-use setrun\sys\exceptions\DomainFormException;
 use Yii;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use setrun\sys\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
+use setrun\sys\helpers\ErrorHelper;
+use yii\base\InvalidConfigException;
+use setrun\sys\exceptions\YiiException;
+use kotchuprik\sortable\actions\Sorting;
 use setrun\sys\services\LanguageService;
 use setrun\sys\entities\manage\Language;
 use setrun\sys\forms\backend\LanguageForm;
-use setrun\sys\forms\backend\search\LanguageSearchForm;
 use setrun\sys\components\controllers\BackController;
-use yii\widgets\ActiveForm;
+use setrun\sys\forms\backend\search\LanguageSearchForm;
 
 /**
  * LanguageController implements the CRUD actions for Language model.
@@ -35,6 +39,20 @@ class LanguageController extends BackController
         $this->service = $service;
         parent::__construct($id, $module, $config);
 
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        return ArrayHelper::merge([
+            'sorting' => [
+                'class'          => Sorting::className(),
+                'orderAttribute' => 'position',
+                'query'          => Language::find()
+            ]
+        ], parent::actions());
     }
 
     /**
@@ -94,30 +112,19 @@ class LanguageController extends BackController
     {
         $model = $this->findModel($id);
         $form  = new LanguageForm($model);
-        if (Yii::$app->request->isAjax) {
-            try {
-                if ($form->load(Yii::$app->request->post()) && $form->validate()){
+        if (Yii::$app->request->isAjax && $form->load(Yii::$app->request->post())){
+            $errors = ActiveForm::validate($form);
+            if (!$errors) {
+                try {
                     $this->service->edit($form->id, $form);
                     $this->output['status'] = 1;
-                } else {
-                    $this->output['errors'] = ActiveForm::validate($form);
+                } catch (YiiException $e) {
+                    $errors = ErrorHelper::checkErrorModel($e->data, $form);
                 }
-            } catch (DomainFormException $e) {
-                $result = [];
-                foreach ((array) $e->data as $attribute => $message) {
-                    if ($form->hasProperty($attribute)) {
-                        $result[Html::getInputId($form, $attribute)] = $message;
-                    }
-
-                }
-                $this->output['errors'] = $result;
-                Yii::$app->errorHandler->logException($e);
             }
-            return;
+            $this->output['errors'] = $errors; return;
         }
-        return $this->render('edit', [
-            'model' => $form,
-        ]);
+        return $this->render('edit', ['model' => $form]);
     }
 
     /**
@@ -128,13 +135,46 @@ class LanguageController extends BackController
      */
     public function actionDelete($id)
     {
-        try {
-            $this->service->remove($id);
-        } catch (\DomainException $e) {
-            Yii::$app->errorHandler->logException($e);
-            Yii::$app->session->setFlash('error', $e->getMessage());
+        if (Yii::$app->request->isAjax) {
+            try {
+                $this->service->remove($id);
+                $this->output['status'] = 1;
+            } catch (YiiException $e) {
+                $this->output['errors'] = (array)$e->data;
+            }
         }
-        return $this->redirect(['index']);
+    }
+
+    /**
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDefault($id)
+    {
+        if (Yii::$app->request->isAjax) {
+            try {
+                $this->service->default($id);
+                $this->output['status'] = 1;
+            } catch (YiiException $e) {
+                $this->output['errors'] = (array)$e->data;
+            }
+        }
+    }
+
+    /**
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionStatus($id)
+    {
+        if (Yii::$app->request->isAjax) {
+            try {
+                $this->service->status($id, Yii::$app->request->post('status'));
+                $this->output['status'] = 1;
+            } catch (YiiException $e) {
+                $this->output['errors'] = (array)$e->data;
+            }
+        }
     }
 
     /**

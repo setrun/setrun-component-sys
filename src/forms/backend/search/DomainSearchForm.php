@@ -8,12 +8,12 @@
 namespace setrun\sys\forms\backend\search;
 
 use Yii;
-use setrun\sys\components\models\BaseSearchModel;
+use setrun\sys\components\base\SearchForm;
 
 /**
  * DomainSearch represents the model behind the search form about `setrun\sys\entities\Domain`.
  */
-class DomainSearchForm extends BaseSearchModel
+class DomainSearchForm extends SearchForm
 {
     /**
      * @var string
