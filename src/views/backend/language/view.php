@@ -54,7 +54,9 @@ $this->params['breadcrumbs'][] = $model->name;
                         'value' => function($model, $index){
                             return  Yii::$app->formatter->asDate($model->updated_at, 'long') . ' [<i>' . $model->getTimeAgo('updated_at') . '</i>]';
                         }
-                    ]
+                    ],
+                    'created_by',
+                    'updated_by'
                 ],
             ]) ?>
         </div>

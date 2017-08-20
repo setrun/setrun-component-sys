@@ -21,6 +21,8 @@ use setrun\sys\entities\queries\LanguageQuery;
  * @property integer $position
  * @property integer $created_at
  * @property integer $updated_at
+ * @property integer $created_by
+ * @property integer $updated_by
  *
  * @property Domain $d
  */
@@ -56,6 +58,8 @@ class Language extends \yii\db\ActiveRecord
         $self->alias   = $alias;
         $self->icon    = $icon;
         $self->status  = $status;
+        $self->created_by = Yii::$app->user->identity->id;
+        $self->updated_by = Yii::$app->user->identity->id;
         return $self;
     }
 
@@ -76,6 +80,7 @@ class Language extends \yii\db\ActiveRecord
         $this->alias   = $alias;
         $this->icon    = $icon;
         $this->status  = $status;
+        $this->updated_by = Yii::$app->user->identity->id;
     }
 
     /**
@@ -121,6 +126,8 @@ class Language extends \yii\db\ActiveRecord
             'position'   => Yii::t('setrun/sys/language', 'Position'),
             'created_at' => Yii::t('setrun/sys/language', 'Created At'),
             'updated_at' => Yii::t('setrun/sys/language', 'Updated At'),
+            'created_by' => Yii::t('setrun/sys/language', 'Created By'),
+            'updated_by' => Yii::t('setrun/sys/language', 'Updated By'),
         ];
     }
 

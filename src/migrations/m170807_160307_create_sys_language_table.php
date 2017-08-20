@@ -40,7 +40,9 @@ class m170807_160307_create_sys_language_table extends Migration
             'is_default'  => $this->integer()->notNull()->defaultValue(0),
             'position'    => $this->integer()->notNull()->defaultValue(1),
             'created_at'  => $this->integer()->notNull()->unsigned(),
-            'updated_at'  => $this->integer()->notNull()->unsigned()
+            'updated_at'  => $this->integer()->notNull()->unsigned(),
+            'created_by'  => $this->integer()->notNull(),
+            'updated_by'  => $this->integer()->notNull()
         ], $tableOptions);
 
         $this->createIndex('{{%idx-sys_language-name}}',   $this->table, 'name');
