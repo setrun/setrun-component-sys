@@ -1,7 +1,7 @@
 {
-    "name": "setrun/setrun-sys",
+    "name": "setrun/setrun-sys-component",
     "description": "System component for SETRUN CMS",
-    "keywords": ["yii2"," extension"," cms"," setrun", "framework", "SETRUN", "yii2-extension"],
+    "keywords": ["yii2", "yii2-extension", "yii2-cms", "cms", "setrun", "setrun-cms", "setrun-extension"],
     "homepage": "http://setrun.ru",
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
