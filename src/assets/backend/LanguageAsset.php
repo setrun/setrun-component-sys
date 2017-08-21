@@ -7,7 +7,7 @@
 
 namespace setrun\sys\assets\backend;
 
-use setrun\sys\components\web\AssetBundle;
+use setrun\sys\over\web\AssetBundle;
 
 /**
  * Class LanguageAsset.

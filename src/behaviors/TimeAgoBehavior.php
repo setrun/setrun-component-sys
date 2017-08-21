@@ -10,7 +10,7 @@ namespace setrun\sys\behaviors;
 use Yii;
 use yii\helpers\Html;
 use yii\base\Behavior;
-use yii\timeago\TimeAgo;
+use setrun\sys\over\widgets\TimeAgo;
 
 /**
  * Format to the desired date format with jquery plugin

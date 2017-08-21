@@ -11,10 +11,8 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('setrun/sys/language', 'Lang
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="language-create">
-
     <?= $this->render('_form', [
         'model' => $model,
         'side'  => 'сreate'
     ]) ?>
-
 </div>

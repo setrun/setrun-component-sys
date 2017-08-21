@@ -11,7 +11,8 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('setrun/sys/domain', 'Domain
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="domain-create">
-
-            <?= $this->render('_form', ['model' => $model]) ?>
-
+    <?= $this->render('_form', [
+        'model' => $model,
+        'side'  => 'сreate'
+    ]) ?>
 </div>

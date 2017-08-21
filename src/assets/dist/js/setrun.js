@@ -5,9 +5,45 @@
 
     Setrun.$doc       = $(doc); // Document
     Setrun.fn         = {};     // List of functions
+    Setrun.plug       = {};     // List of plugins
     Setrun.components = {};     // List of actions
     Setrun.setup      = {};     // List of configuration
     Setrun.domready   = false;  // Dom not ready
+
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
+    Setrun.plugin = function (name) {
+        if (typeof this.plug[name] !== 'undefined' && this.plug[name] !== null) {
+            return this.plug[name];
+        }
+        throw new Exception('Plugin [' + name + '] is not found');
+    };
+
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
+    Setrun.setPlugin = function (name, data) {
+        if (typeof this.plug[name] === 'undefined' || this.plug[name] === null) {
+            return this.plug[name] = data;
+        }
+        throw new Exception('Plugin [' + name + '] is already exists');
+    };
+
+    /**
+     *
+     * @param name
+     * @returns {*}
+     */
+    Setrun.removePlugin = function (name) {
+        if (typeof this.plug[name] !== 'undefined') {
+            return this.plug[name] = null;
+        }
+    };
 
     /**
      * Data request (ajax)

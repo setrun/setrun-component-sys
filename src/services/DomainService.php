@@ -38,7 +38,7 @@ class DomainService
     {
         $model = Domain::create($form->name, $form->alias, $form->url);
         $this->repository->save($model);
-        return $domain;
+        return $model;
     }
 
     /**

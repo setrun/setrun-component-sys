@@ -6,6 +6,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $this  yii\web\View */
 /* @var $model setrun\sys\forms\backend\DomainForm */
 /* @var $form  yii\widgets\ActiveForm */
+/* @var $side  string */
 ?>
 
 <div class="domain-form">
@@ -23,7 +24,9 @@ use yii\bootstrap\ActiveForm;
     <div class="box">
         <div class="box-body">
             <p class="pull-right">
-                <?= Html::submitButton('<i class="fa fa-check"></i> ' . Yii::t('setrun/backend', 'Save'), ['class' => 'btn btn-primary']) ?>
+                <?= Html::submitButton(
+                    '<i class="fa fa-check"></i> ' . Yii::t('setrun/backend', 'Save'),
+                    ['class' => 'btn btn-primary ' . ($side == 'edit' ? 'ajax-submit-button' : '')]) ?>
             </p>
             <div class="clearfix"></div>
             <hr/>

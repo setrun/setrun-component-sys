@@ -119,7 +119,7 @@ class LanguageController extends BackController
                     $this->service->edit($form->id, $form);
                     $this->output['status'] = 1;
                 } catch (YiiException $e) {
-                    $errors = ErrorHelper::checkErrorModel($e->data, $form);
+                    $errors = ErrorHelper::checkModel($e->data, $form);
                 }
             }
             $this->output['errors'] = $errors; return;

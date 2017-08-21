@@ -3,12 +3,15 @@
 namespace setrun\sys\controllers\backend;
 
 use Yii;
+use yii\widgets\ActiveForm;
 use yii\web\NotFoundHttpException;
+use setrun\sys\helpers\ErrorHelper;
 use setrun\sys\services\DomainService;
 use setrun\sys\entities\manage\Domain;
 use setrun\sys\forms\backend\DomainForm;
 use setrun\sys\forms\backend\search\DomainSearchForm;
 use setrun\sys\components\controllers\BackController;
+
 
 /**
  * DomainController implements the CRUD actions for Domain model.
@@ -90,18 +93,19 @@ class DomainController extends BackController
     {
         $model = $this->findModel($id);
         $form  = new DomainForm($model);
-        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            try {
-                $this->service->edit($form->id, $form);
-                return $this->redirect(['view', 'id' => $form->id]);
-            } catch (\DomainException $e) {
-                Yii::$app->errorHandler->logException($e);
-                Yii::$app->session->setFlash('error', $e->getMessage());
+        if (Yii::$app->request->isAjax && $form->load(Yii::$app->request->post())){
+            $errors = ActiveForm::validate($form);
+            if (!$errors) {
+                try {
+                    $this->service->edit($form->id, $form);
+                    $this->output['status'] = 1;
+                } catch (YiiException $e) {
+                    $errors = ErrorHelper::checkModel($e->data, $form);
+                }
             }
+            $this->output['errors'] = $errors; return;
         }
-        return $this->render('edit', [
-            'model' => $form,
-        ]);
+        return $this->render('edit', ['model' => $form]);
     }
 
     /**
@@ -112,13 +116,14 @@ class DomainController extends BackController
      */
     public function actionDelete($id)
     {
-        try {
-            $this->service->remove($id);
-        } catch (\DomainException $e) {
-            Yii::$app->errorHandler->logException($e);
-            Yii::$app->session->setFlash('error', $e->getMessage());
+        if (Yii::$app->request->isAjax) {
+            try {
+                $this->service->remove($id);
+                $this->output['status'] = 1;
+            } catch (YiiException $e) {
+                $this->output['errors'] = (array) $e->data;
+            }
         }
-        return $this->redirect(['index']);
     }
 
     /**

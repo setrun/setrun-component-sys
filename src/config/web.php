@@ -8,11 +8,11 @@
 return [
     'components' => [
         'urlManager' => [
-            'class' => 'setrun\sys\components\web\UrlManager'
+            'class' => 'setrun\sys\over\web\UrlManager'
         ],
         'view' => [
             'theme' => [
-                'class' => 'setrun\sys\components\base\Theme'
+                'class' => 'setrun\sys\over\base\Theme'
             ]
         ],
     ]

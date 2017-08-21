@@ -15,15 +15,20 @@
     Component.autoload = true;
 
     Component.defaultHandler = function (e) {
-        var $el    = $(e.target),
-            id     = $el.data('id'),
-            url    = $el.data('url'),
-            state  = $el.is(':checked') ? 1 : 0;
+        var $el     = $(e.target),
+            id      = $el.data('id'),
+            url     = $el.data('url'),
+            message = $el.data('confirm-message'),
+            state   = $el.is(':checked') ? 1 : 0;
 
         if (state === 0) {
             setTimeout(function () { $el.prop('checked', true ); }, 250);
         } else {
-            this.default(id, url, $el);
+            if (confirm(message)) {
+                this.default(id, url, $el);
+            } else {
+                setTimeout(function () { $el.prop('checked', false ); }, 250);
+            }
         }
     };
 
@@ -39,11 +44,11 @@
     Component.status = function (status, id, url, $el) {
         var options = {};
         options.onSuccess = function (res) {
-            Setrun.helpers().pjaxReload();
+            Setrun.plugin('helper').pjaxReload();
         };
         options.onError = function (res) {
             setTimeout(function () { $el.prop('checked', +status === 0 ? true : false ); }, 250)
-            Setrun.helpers().notyErrors(res);
+            Setrun.plugin('helper').notyErrors(res);
         };
         Setrun.fn.request({status:status}, options, url);
     };
@@ -51,14 +56,14 @@
     Component.default = function (id, url, $el) {
         var options = {};
         options.onSuccess = function (res) {
-            Setrun.helpers().pjaxReload();
+            Setrun.plugin('helper').pjaxReload();
         };
         options.onError = function (res) {
             setTimeout(function () { $el.prop('checked', false ); }, 250)
-            Setrun.helpers().notyErrors(res);
+            Setrun.plugin('helper').notyErrors(res);
         };
         Setrun.fn.request({}, options, url);
     };
 
-    Setrun.component('setrun/sys/backend/language/index', Component);
+    Setrun.component('setrun_sys_backend_language_index', Component);
 })(jQuery, Setrun);

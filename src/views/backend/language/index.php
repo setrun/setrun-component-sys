@@ -124,13 +124,19 @@ LanguageAsset::register($this, [
                         'format'    => 'raw',
                         'value'     => function($model, $index, $key){
                             $checked = $model->is_default == 1 ? 'checked' : '';
-                            $html    = "<input type=\"checkbox\" class=\"switcher switcher_default\" {$checked} data-id=\"{$model->id}\" data-url=\"" . Url::to(['default', 'id' => $model->id]) ."\" id=\"switcher_default_{$model->id}\" />";
+                            $html    = "<input type=\"checkbox\" 
+                                               class=\"switcher switcher_default\" {$checked} 
+                                               data-id=\"{$model->id}\" 
+                                               data-url=\"" . Url::to(['default', 'id' => $model->id]) ."\" 
+                                               data-confirm-message=\"" . Yii::t('setrun/sys/language', 'Do you want to set the default language ?') ."\" 
+                                               id=\"switcher_default_{$model->id}\" 
+                                        />";
                             $html   .= "<label class='switcher_label' for=\"switcher_default_{$model->id}\"></label>";
                             return $html;
                         },
                     ],
                     [
-                        'class' => 'setrun\backend\components\grid\ActionColumn',
+                        'class' => 'setrun\backend\over\grid\ActionColumn',
                         'template' =>'{sort} {edit} {view}  {delete}',
                         'buttons'  =>[
                             'sort' => function ($url, $model, $key) {

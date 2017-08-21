@@ -5,7 +5,7 @@
  * @link   https://github.com/dizirator
  */
 
-namespace setrun\sys\components\base;
+namespace setrun\sys\over\base;
 
 use Yii;
 

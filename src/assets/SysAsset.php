@@ -7,7 +7,7 @@
 
 namespace setrun\sys\assets;
 
-use setrun\sys\components\web\AssetBundle;
+use setrun\sys\over\web\AssetBundle;
 
 /**
  * Class SysAsset.

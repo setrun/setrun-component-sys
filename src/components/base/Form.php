@@ -7,6 +7,9 @@
 
 namespace setrun\sys\components\base;
 
+use Yii;
+use setrun\sys\over\base\Model;
+
 /**
  * Class Form.
  */

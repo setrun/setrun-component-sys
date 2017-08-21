@@ -37,7 +37,7 @@ LanguageAsset::register($this, [
             <p class="pull-right">
                 <?= Html::submitButton(
                         '<i class="fa fa-check"></i> ' . Yii::t('setrun/backend', 'Save'),
-                        ['class' => 'btn btn-primary ' . ($side == 'edit' ? 'submit-ajax' : '')]) ?>
+                        ['class' => 'btn btn-primary ' . ($side == 'edit' ? 'ajax-submit-button' : '')]) ?>
             </p>
             <div class="clearfix"></div>
             <hr/>

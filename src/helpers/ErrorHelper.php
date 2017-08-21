@@ -22,7 +22,7 @@ class ErrorHelper
      * @param  Model $model
      * @return array
      */
-    public static function checkErrorModel($errors, Model $model) : array
+    public static function checkModel($errors, Model $model) : array
     {
         $output = [];
         if (!is_array($errors)) {

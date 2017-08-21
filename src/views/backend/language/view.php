@@ -17,9 +17,9 @@ $this->params['breadcrumbs'][] = $model->name;
             <p class="pull-right">
                 <?= Html::a('<i class="fa fa-pencil"></i> ' . Yii::t('setrun/backend', 'Edit'),   ['edit',  'id' => $model->id], ['class' => 'btn btn-default']) ?>
                 <?= Html::a('<i class="fa fa-trash"></i> ' . Yii::t('setrun/backend', 'Delete'),  ['delete','id' => $model->id], [
-                    'class' => 'btn btn-danger delete-item',
+                    'class' => 'btn btn-danger ajax-delete-item',
                     'data-confirm-message' => Yii::t('setrun/backend', 'Do you want to delete ?'),
-                    'data-redirect' => \yii\helpers\Url::to(['index'])
+                    'data-redirect-url' => \yii\helpers\Url::to(['index'])
                 ]) ?>
             </p>
             <div class="clearfix"></div>

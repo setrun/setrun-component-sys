@@ -13,5 +13,6 @@ $this->params['breadcrumbs'][] = Yii::t('setrun/sys/domain', 'Edit');
 <div class="domain-edit">
     <?= $this->render('_form', [
         'model' => $model,
+        'side'  => 'edit'
     ]) ?>
 </div>

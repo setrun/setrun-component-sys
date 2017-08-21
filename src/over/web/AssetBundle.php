@@ -5,7 +5,7 @@
  * @link   https://github.com/dizirator
  */
 
-namespace setrun\sys\components\web;
+namespace setrun\sys\over\web;
 
 use Yii;
 use setrun\sys\helpers\FileHelper;

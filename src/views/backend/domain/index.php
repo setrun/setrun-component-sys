@@ -1,16 +1,21 @@
 <?php
 
+use kartik\icons\Icon;
+use yii\helpers\Url;
+use yii\widgets\Pjax;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\helpers\Url;
 use kartik\daterange\DateRangePicker;
 
-/* @var $this yii\web\View */
-/* @var $searchModel setrun\sys\forms\search\DomainSearch */
+/* @var $this         yii\web\View */
+/* @var $searchModel  setrun\sys\forms\search\DomainSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('setrun/sys/domain', 'Domains');
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['pjaxID']        = 'domain-index';
+
+Icon::map($this, Icon::FI);
 
 ?>
 <div class="domain-index">
@@ -20,8 +25,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 <a href="<?= Url::to(['create']) ?>" class="btn btn-success">
                     <i class="fa fa-fw fa-plus"></i> <?= Yii::t('setrun/sys/domain', 'Create Domain') ?>
                 </a>
+                <a href="javascript:void(0)" class="btn btn-info" id="clear-filter">
+                    <?= Icon::show('times', [], Icon::FA) ?>
+                    <?= Yii::t('setrun/backend', 'Clear filters') ?>
+                </a>
             </p>
             <hr />
+            <?php Pjax::begin([
+                'id'      => $this->params['pjaxID'],
+                'timeout' => 3000
+            ]);
+            if (isset($_GET['_pjax'])) $_GET['_pjax'] = ''; ?>
             <?= GridView::widget([
                 'dataProvider' => $dataProvider,
                 'filterModel' => $searchModel,
@@ -61,9 +75,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]
                         ])
                     ],
-                    ['class' => 'setrun\backend\components\grid\ActionColumn'],
+                    ['class' => 'setrun\backend\over\grid\ActionColumn'],
                 ],
             ]); ?>
+            <?php Pjax::end(); ?>
         </div>
     </div>
 </div>
