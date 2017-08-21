@@ -51,6 +51,16 @@ class m170807_160307_create_sys_language_table extends Migration
         $this->createIndex('{{%idx-sys_language-status}}', $this->table, 'status');
 
         $this->addForeignKey('{{%fk-sys_language-domain}}', $this->table, 'domain_id', '{{%sys_domain}}', 'id', 'CASCADE');
+
+        // Insert default languages
+        $this->batchInsert($this->table, [
+            'slug',       'name',     'locale',     'alias',  'icon', 'status', 'domain_id',
+            'is_default', 'position', 'created_at', 'updated_at', 'created_by', 'updated_by'
+        ],
+        [
+            ['ru', 'Русский', 'ru_RU', 'ru',  'ru', 1, null,  1, 0, time(), time(), 1, 1],
+            ['en', 'English', 'en_GB', 'en',  'gb', 1, null,  0, 1, time(), time(), 1, 1],
+        ]);
     }
 
     /**
