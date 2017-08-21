@@ -1,5 +1,5 @@
 {
-    "name": "setrun/setrun-sys-component",
+    "name": "setrun/setrun-component-sys",
     "description": "System component for SETRUN CMS",
     "keywords": ["yii2", "yii2-extension", "yii2-cms", "cms", "setrun", "setrun-cms", "setrun-extension"],
     "homepage": "http://setrun.ru",
