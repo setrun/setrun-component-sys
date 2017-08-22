@@ -36,8 +36,7 @@ class BaseController  extends \yii\web\Controller
      */
     public function init()
     {
-        Yii::setAlias('@theme',      $this->view->theme->getBasePath());
-        Yii::setAlias('@themeAsset', $this->view->theme->themeAsset);
+        Yii::setAlias('@theme', $this->view->theme->getBasePath());
         parent::init();
     }
 

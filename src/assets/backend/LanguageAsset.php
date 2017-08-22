@@ -23,6 +23,6 @@ class LanguageAsset extends AssetBundle
      * @inheritdoc
      */
     public $depends = [
-        '@themeAsset'
+        'theme\assets\ThemeAsset'
     ];
 }

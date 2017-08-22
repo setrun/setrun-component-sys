@@ -55,8 +55,7 @@ class BackController extends BaseController
     public function init()
     {
         $this->view->theme->setBasePath('@themes/backend/imperial');
-        $this->view->theme->themeAsset = 'themes\backend\imperial\assets\ThemeAsset';
-        Yii::$app->assetManager->forceCopy = true;
+        Yii::$app->assetManager->forceCopy = false;
         parent::init();
     }
 }

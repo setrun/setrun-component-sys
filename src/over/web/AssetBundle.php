@@ -20,14 +20,6 @@ class AssetBundle extends \yii\web\AssetBundle
      */
     protected static $assetUrl = null;
 
-    public function init()
-    {
-        foreach ($this->depends as $key => $depend) {
-            $this->depends[$key] = Yii::getAlias($depend);
-        }
-        parent::init();
-    }
-
     /**
      * @inheritdoc
      */
