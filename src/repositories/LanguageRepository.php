@@ -34,7 +34,7 @@ class LanguageRepository
     public function get($id): Language
     {
         if (!$model = Language::findOne($id)) {
-            throw new NotFoundException($this->i18n->t('setrun/sys/language', 'Language is not found'));
+            throw new NotFoundException($this->i18n->t('setrun/sys/language', 'Language is not exists'));
         }
         return $model;
     }
@@ -61,5 +61,15 @@ class LanguageRepository
         if (!$model->delete()) {
             throw new \RuntimeException($this->i18n->t('setrun/sys', 'Removing error'));
         }
+    }
+
+    /**
+     * Find language by condition.
+     * @param array $condition
+     * @return Language|null|array
+     */
+    public function findBy(array $condition) : ?Language
+    {
+        return Language::find()->andWhere($condition)->limit(1)->one();
     }
 }

@@ -3,8 +3,6 @@
 use yii\helpers\Html;
 use kartik\icons\Icon;
 use kartik\form\ActiveForm;
-use setrun\sys\entities\Language;
-use setrun\sys\helpers\FileHelper;
 use setrun\sys\helpers\LanguageHelper;
 use setrun\sys\assets\backend\LanguageAsset;
 
@@ -37,7 +35,7 @@ LanguageAsset::register($this, [
             <p class="pull-right">
                 <?= Html::submitButton(
                         '<i class="fa fa-check"></i> ' . Yii::t('setrun/backend', 'Save'),
-                        ['class' => 'btn btn-primary ' . ($side == 'edit' ? 'ajax-submit-button' : '')]) ?>
+                        ['class' => 'btn btn-default ' . ($side == 'edit' ? 'ajax-submit-button' : '')]) ?>
             </p>
             <div class="clearfix"></div>
             <hr/>
@@ -64,15 +62,6 @@ LanguageAsset::register($this, [
                     </select>
                 </div>
             </div>
-
-            <?= $form->field($model, 'status')->radioButtonGroup(Language::getStatuses(), [
-                'itemOptions' => [
-                    'labelOptions' => [
-                            'class' => 'btn btn-dark'
-                    ]
-                ]
-            ]);?>
-
         </div>
     </div>
     <?php ActiveForm::end(); ?>

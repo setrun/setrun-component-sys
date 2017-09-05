@@ -8,6 +8,7 @@
 namespace setrun\sys\over\widgets;
 
 use Yii;
+use yii\base\InvalidConfigException;
 
 /**
  * Over class \yii\timeago\TimeAgo.

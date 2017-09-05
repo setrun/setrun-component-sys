@@ -25,7 +25,7 @@ Icon::map($this, Icon::FI);
                 <a href="<?= Url::to(['create']) ?>" class="btn btn-success">
                     <i class="fa fa-fw fa-plus"></i> <?= Yii::t('setrun/sys/domain', 'Create Domain') ?>
                 </a>
-                <a href="javascript:void(0)" class="btn btn-info" id="clear-filter">
+                <a href="javascript:void(0)" class="btn btn-default" id="clear-filter">
                     <?= Icon::show('times', [], Icon::FA) ?>
                     <?= Yii::t('setrun/backend', 'Clear filters') ?>
                 </a>

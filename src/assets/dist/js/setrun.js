@@ -5,7 +5,7 @@
 
     Setrun.$doc       = $(doc); // Document
     Setrun.fn         = {};     // List of functions
-    Setrun.plug       = {};     // List of plugins
+    Setrun.helpers    = {};     // List of helpers
     Setrun.components = {};     // List of actions
     Setrun.setup      = {};     // List of configuration
     Setrun.domready   = false;  // Dom not ready
@@ -15,11 +15,24 @@
      * @param name
      * @returns {*}
      */
-    Setrun.plugin = function (name) {
-        if (typeof this.plug[name] !== 'undefined' && this.plug[name] !== null) {
-            return this.plug[name];
+    Setrun.helper = function (name) {
+        if (typeof this.helpers[name] === 'object') {
+            return this.helpers[name];
         }
-        throw new Exception('Plugin [' + name + '] is not found');
+        throw new Error('Helper [' + name + '] is not exists');
+    };
+
+    /**
+     *
+     * @param name
+     * @param data
+     * @returns {*}
+     */
+    Setrun.setHelper = function (name, data) {
+        if (typeof this.helpers[name] === 'undefined') {
+            return this.helpers[name] = data;
+        }
+        throw new Error('Helper [' + name + '] is already exists');
     };
 
     /**
@@ -27,22 +40,11 @@
      * @param name
      * @returns {*}
      */
-    Setrun.setPlugin = function (name, data) {
-        if (typeof this.plug[name] === 'undefined' || this.plug[name] === null) {
-            return this.plug[name] = data;
+    Setrun.removeHelper = function (name) {
+        if (typeof this.helpers[name] !== 'undefined') {
+            delete this.helpers[name];
         }
-        throw new Exception('Plugin [' + name + '] is already exists');
-    };
-
-    /**
-     *
-     * @param name
-     * @returns {*}
-     */
-    Setrun.removePlugin = function (name) {
-        if (typeof this.plug[name] !== 'undefined') {
-            return this.plug[name] = null;
-        }
+        throw new Error('Helper [' + name + '] is not exists');
     };
 
     /**
@@ -66,7 +68,7 @@
         handlers         : {},
         init             : function() {},
         boot             : function() {},
-        autoload         : false,
+        autoload         : true,
         registerHandlers : function() {
             var that = this;
             $.map(that.handlers, function(value, key) {

@@ -1,8 +1,6 @@
 ;(function($, Setrun){
     var Component = {};
 
-    Component.autoload = true;
-
     Component.init = function () {
         $('#languageform-icon').chosen('destroy');
         $('#languageform-icon').chosenImage({
@@ -11,5 +9,5 @@
         });
     };
 
-    Setrun.component('setrun/sys/backend/language/form', Component);
+    Setrun.component('backend-language-form', Component);
 })(jQuery, Setrun);

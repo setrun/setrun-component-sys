@@ -9,6 +9,7 @@ namespace setrun\sys\forms\backend;
 
 use Yii;
 use setrun\sys\components\base\Form;
+use setrun\sys\helpers\LanguageHelper;
 use setrun\sys\entities\manage\Language;
 
 /**
@@ -47,11 +48,6 @@ class LanguageForm extends Form
     public $icon;
 
     /**
-     * @var string
-     */
-    public $status;
-
-    /**
      * @var Language
      */
     private $_model;
@@ -64,15 +60,12 @@ class LanguageForm extends Form
     public function __construct(Language $model = null, $config = [])
     {
         if ($model) {
-            $this->id      = $model->id;
-            $this->name    = $model->name;
-            $this->alias   = $model->alias;
-            $this->slug    = $model->slug;
-            $this->icon    = $model->icon;
-            $this->locale  = $model->locale;
-            $this->status  = $model->status;
-        } else {
-            $this->status = Language::STATUS_ACTIVE;
+            $this->id     = $model->id;
+            $this->name   = $model->name;
+            $this->alias  = $model->alias;
+            $this->slug   = $model->slug;
+            $this->icon   = $model->icon;
+            $this->locale = $model->locale;
         }
         $this->_model = $model;
         parent::__construct($config);
@@ -85,11 +78,8 @@ class LanguageForm extends Form
     {
         return [
             [['name', 'slug', 'alias'], 'required'],
-            [['status'], 'integer'],
-            [['slug', 'name', 'alias'], 'string', 'max' => 50],
-            [['locale'],  'string', 'max' => 255],
-            [['icon'], 'string', 'max' => 10],
-            [['slug'], 'unique', 'targetClass' => Language::class, 'filter' => $this->_model ? ['<>', 'slug', $this->_model->slug] : null]
+            [['slug', 'name', 'alias', 'locale'], 'string', 'max' => 50],
+            [['icon'], 'string', 'max' => 10]
         ];
     }
 
@@ -98,6 +88,6 @@ class LanguageForm extends Form
      */
     public function attributeLabels()
     {
-        return Language::getAttributeLabels();
+        return LanguageHelper::getAttributeLabels();
     }
 }

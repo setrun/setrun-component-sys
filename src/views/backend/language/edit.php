@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('setrun/sys/language', 'Languages'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('setrun/sys/language', 'Edit');
+$this->params['breadcrumbs'][] = Yii::t('setrun/backend', 'Edit');
 ?>
 <div class="language-edit">
     <?= $this->render('_form', [

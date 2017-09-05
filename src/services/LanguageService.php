@@ -18,7 +18,7 @@ use setrun\sys\repositories\LanguageRepository;
 class LanguageService
 {
     /**
-     * @var DomainRepository
+     * @var LanguageRepository
      */
     protected $repository;
 
@@ -42,9 +42,9 @@ class LanguageService
             $form->slug,
             $form->locale,
             $form->alias,
-            $form->icon,
-            $form->status
+            $form->icon
         );
+        $this->assertIsUniqueSlug($model);
         $this->repository->save($model);
         return $model;
     }
@@ -63,10 +63,9 @@ class LanguageService
             $form->slug,
             $form->locale,
             $form->alias,
-            $form->icon,
-            $form->status
+            $form->icon
         );
-        $this->assertIsNotDefaultDraft($model);
+        $this->assertIsUniqueSlug($model);
         $this->repository->save($model);
     }
 
@@ -78,72 +77,23 @@ class LanguageService
     public function remove($id): void
     {
         $model = $this->repository->get($id);
-        $this->assertIsNotDefault($model);
         $this->repository->remove($model);
     }
 
-    public function default($id) : void
-    {
-        $model = $this->repository->get($id);
-        $this->assertIsNotDraft($model);
-        $model->default();
-        $this->repository->save($model);
-    }
-
-    public function status($id, $status) : void
-    {
-        $model = $this->repository->get($id);
-        $this->assertIsStatusExists($status);
-        $model->status($status);
-        $this->assertIsNotDefaultDraft($model);
-        $this->repository->save($model);
-    }
-
     /**
      * @param Language $model
      */
-    private function assertIsNotDefaultDraft(Language $model): void
+    private function assertIsUniqueSlug(Language $model): void
     {
-        if ($model->status == Language::STATUS_DRAFT && $model->is_default == 1) {
+        $result = $this->repository->findBy([
+            'slug' => $model->slug
+        ]);
+        if ($result && $model->id != $result->id) {
             throw new YiiException([
-                'status' => 'Unable to manage the default language is status draft'
+                'slug' => 'Slug for language is already exists'
             ]);
         }
     }
 
-    /**
-     * @param Language $model
-     */
-    private function assertIsNotDefault(Language $model): void
-    {
-        if ($model->is_default == 1) {
-            throw new YiiException([
-                'Unable to remove the default language'
-            ]);
-        }
-    }
 
-    /**
-     * @param Language $model
-     */
-    private function assertIsNotDraft(Language $model): void
-    {
-        if ($model->status == Language::STATUS_DRAFT) {
-            throw new YiiException([
-                'status' => 'Unable to manage the language is status draft'
-            ]);
-        }
-    }
-
-    /**
-     * @param $status
-     */
-    private function assertIsStatusExists($status)
-    {
-        if (!isset(Language::getStatuses()[$status])) {
-            throw new YiiException([
-                'status' => 'Status is not exists'
-            ]);
-        }
-    }
 }

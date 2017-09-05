@@ -24,9 +24,8 @@ use setrun\sys\components\configurator\Storage;
  */
 class Configurator
 {
-    public const WEB        = 'application.web';
-    public const CONSOLE    = 'application.console';
-    public const COMPONENT  = 'component';
+    public const WEB      = 'application-web';
+    public const CONSOLE  = 'application-console';
 
     /**
      * List of configurations application.
@@ -78,14 +77,14 @@ class Configurator
     }
 
     /**
-     * Get a configuration of key.
+     * Get a settings of key.
      * @param null $key
      * @return Storage
      */
-    public function component($key = null) : Storage
+    public function setting($key = null) : Storage
     {
         $this->getStorage()->clearKey();
-        $storage = $this->getStorage()->addKey(self::COMPONENT);
+        $storage = $this->getStorage()->addKey(self::SETTING);
         if ($key === null) {
             return $this->getStorage()->get();
         }
@@ -107,15 +106,16 @@ class Configurator
     }
 
     /**
-     * Get storage interface.
+     * Get storage interface
+     * @param bool $clone
      * @return Storage
      */
-    public function getStorage() : Storage
+    public function getStorage($clone = false) : Storage
     {
         if ($this->storage === null) {
             $this->storage = new Storage($this->getCache());
         }
-        return $this->storage;
+        return $clone ? clone $this->storage : $this->storage;
     }
 
     /**
@@ -125,41 +125,10 @@ class Configurator
      */
     public function load(array $files) : void
     {
-        $this->loadStorageConfig();
         $this->appConfig = $this->getCache()->getOrSet($this->env, function() use ($files){
             $config = $this->loadBaseConfig($files);
             return $this->loadInstalledComponentsConfig($config);
         });
-    }
-
-    /**
-     * Update configuration by user.
-     * @param $uid
-     * @return void
-     */
-    public function updateComponentsByUser($uid) : void
-    {
-        $key    = self::COMPONENT . '.user.' . $uid;
-        $config = $this->getCache()->getOrSet($key, function() use ($uid) {
-            return $this->loadComponentsConfigByUser($uid);
-        });
-        $this->getStorage()->add(self::COMPONENT, $config);
-        unset($config);
-    }
-
-    /**
-     * Update configuration by user.
-     * @param $did
-     * @return void
-     */
-    public function updateComponentsByDomain($did) : void
-    {
-        $key    = self::COMPONENT . '.domain.' . $did;
-        $config = $this->getCache()->getOrSet($key, function() use ($did) {
-            return $this->loadComponentsConfigByDomain($did);
-        });
-        $this->getStorage()->add(self::COMPONENT, $config);
-        unset($config);
     }
 
     /**
@@ -179,49 +148,6 @@ class Configurator
     }
 
     /**
-     * Load storage configs.
-     * @return void
-     */
-    protected function loadStorageConfig() : void
-    {
-        $this->getStorage()->existsOrSet('domain', function ($cache){
-            try {
-                return (new Query())->select('*')
-                    ->from(Domain::tableName())
-                    ->indexBy('domain')
-                    ->all($this->getDb());
-            } catch (\yii\db\Exception $exception) {
-               return [];
-            }
-        });
-        $this->getStorage()->existsOrSet('language', function ($cache){
-            try {
-                return (new Query())->select('*')
-                    ->from(Language::tableName())
-                    ->indexBy('slug')
-                    ->all($this->getDb());
-            } catch (\yii\db\Exception $exception) {
-                return [];
-            }
-        });
-        $this->getStorage()->existsOrSet(self::COMPONENT, function ($cache){
-            try {
-                $config = [];
-                $query  = (new Query())->select('*')
-                    ->from(Setting::tableName())
-                    ->where(['user_id' => null])
-                    ->all($this->getDb());
-                foreach ($query as $row) {
-                    $config[$row['name']] = json_decode($row['json_value'], true);
-                }
-                return $config;
-            } catch (\yii\db\Exception $exception) {
-                return [];
-            }
-        });
-    }
-
-    /**
      * Load a configuration of installed components.
      * @param  array $config
      * @return array
@@ -231,42 +157,6 @@ class Configurator
         $env    = $this->env === self::WEB ? 'web' : 'console';
         $config = FileHelper::loadExtensionsFiles('config/main.php',   $config);
         $config = FileHelper::loadExtensionsFiles("config/{$env}.php", $config);
-        return $config;
-    }
-
-    /**
-     * Load a configuration of modules bu user.
-     * @param $uid
-     * @return array
-     */
-    protected function loadComponentsConfigByUser($uid) : array
-    {
-        $config = [];
-        $query  = (new Query())->select('*')
-            ->from(Setting::tableName())
-            ->where(['user_id' => $uid])
-            ->all($this->getDb());
-        foreach ($query as $row) {
-            $config[$row['name']] = json_decode($row['json_value'], true);
-        }
-        return $config;
-    }
-
-    /**
-     * Load a configuration of modules bu domain.
-     * @param $did
-     * @return array
-     */
-    protected function loadComponentsConfigByDomain($did) : array
-    {
-        $config = [];
-        $query  = (new Query())->select('*')
-            ->from(Setting::tableName())
-            ->where(['did' => $did])
-            ->all($this->getDb());
-        foreach ($query as $row) {
-            $config[$row['name']] = json_decode($row['json_value'], true);
-        }
         return $config;
     }
 
@@ -283,21 +173,5 @@ class Configurator
             ]);
         }
         return $this->cache;
-    }
-
-    /**
-     * Get a db object.
-     * @return Connection
-     * @throws InvalidConfigException
-     */
-    public function getDb() : Connection
-    {
-        $file = APP_DIR . '/config/db-local.php';
-        if (!file_exists($file)) {
-            throw new InvalidConfigException('Failed to instantiate component or class "db".');
-        }
-        $db = require $file;
-        Yii::$container->setSingleton($db['class'], $db);
-        return Yii::$container->get($db['class']);
     }
 }

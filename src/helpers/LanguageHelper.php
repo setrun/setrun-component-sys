@@ -8,6 +8,8 @@
 namespace setrun\sys\helpers;
 
 use Yii;
+use yii\web\View;
+use setrun\sys\entities\Language;
 
 /**
  * Languages helper.
@@ -23,7 +25,7 @@ class LanguageHelper extends \yii\helpers\FileHelper
      * @param array $keys
      * @param View $view
      */
-    public static function sendToJs($keys = [], View $view)
+    public static function assignToJs($keys = [], View $view)
     {
         $string = '';
         if (!static::$registeredJs) {
@@ -45,6 +47,38 @@ class LanguageHelper extends \yii\helpers\FileHelper
         if (trim($code) !== '') {
             return FileHelper::getAssetUrl('kartik\icons\FlagIconAsset') . '/flags/4x3/' . strtolower($code) . '.svg';
         }
+    }
+
+    /**
+     * Get attributes for labels of fields.
+     * @return array
+     */
+    public static function getAttributeLabels() : array
+    {
+        return [
+            'id'         => Yii::t('setrun/sys/language', 'ID'),
+            'slug'       => Yii::t('setrun/sys/language', 'Slug'),
+            'name'       => Yii::t('setrun/sys/language', 'Name'),
+            'locale'     => Yii::t('setrun/sys/language', 'Locale'),
+            'alias'      => Yii::t('setrun/sys/language', 'Alias'),
+            'icon'       => Yii::t('setrun/sys/language', 'Icon'),
+            'created_at' => Yii::t('setrun/sys/language', 'Created At'),
+            'updated_at' => Yii::t('setrun/sys/language', 'Updated At'),
+            'created_by' => Yii::t('setrun/sys/language', 'Created By'),
+            'updated_by' => Yii::t('setrun/sys/language', 'Updated By'),
+        ];
+    }
+
+    /**
+     * Get all statuses.
+     * @return array
+     */
+    public static function getStatuses() : array
+    {
+        return [
+            Language::STATUS_ACTIVE => Yii::t('setrun/sys/language', 'Active'),
+            Language::STATUS_DRAFT  => Yii::t('setrun/sys/language', 'Draft')
+        ];
     }
 
     /**

@@ -33,11 +33,6 @@ class LanguageSearchForm extends SearchForm
     /**
      * @var string
      */
-    public $status;
-
-    /**
-     * @var string
-     */
     public $updated_at;
 
     /**
@@ -48,7 +43,7 @@ class LanguageSearchForm extends SearchForm
     /**
      * @inheritdoc
      */
-    protected $defaultOrder = ['position' => SORT_ASC];
+    protected $defaultOrder = ['slug' => SORT_ASC];
 
     /**
      * @inheritdoc
@@ -56,7 +51,7 @@ class LanguageSearchForm extends SearchForm
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
+            [['id'], 'integer'],
             [['name', 'slug', 'updated_at'], 'safe'],
         ];
     }
@@ -66,11 +61,10 @@ class LanguageSearchForm extends SearchForm
      */
     public function buildFilter(&$query)
     {
-        $this->filterTimestamp($query, 'updated_at');
+        $this->filterTimestamp($query);
 
         $query->andFilterWhere([
-            'id'     => $this->id,
-            'status' => $this->status
+            'id' => $this->id
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);

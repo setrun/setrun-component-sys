@@ -35,8 +35,8 @@ class m170807_160040_create_sys_domain_table extends Migration
             'url'        => $this->string(100)->notNull()->unique(),
             'created_at' => $this->integer()->unsigned()->notNull(),
             'updated_at' => $this->integer()->unsigned()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'created_by' => $this->integer(),
+            'updated_by' => $this->integer(),
 
         ], $tableOptions);
 

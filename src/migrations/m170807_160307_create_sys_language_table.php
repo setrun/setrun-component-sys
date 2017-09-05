@@ -34,35 +34,21 @@ class m170807_160307_create_sys_language_table extends Migration
             'id'          => $this->primaryKey(),
             'slug'        => $this->string(50)->notNull()->unique(),
             'name'        => $this->string(50)->notNull(),
-            'locale'      => $this->string(255)->notNull(),
             'alias'       => $this->string(50)->notNull(),
+            'locale'      => $this->string(50),
             'icon'        => $this->string(10),
-            'status'      => $this->smallInteger()->notNull()->defaultValue(1),
-            'domain_id'   => $this->integer()->defaultValue(null),
-            'is_default'  => $this->integer()->notNull()->defaultValue(0),
             'position'    => $this->integer()->notNull()->defaultValue(1),
             'created_at'  => $this->integer()->notNull()->unsigned(),
             'updated_at'  => $this->integer()->notNull()->unsigned(),
-            'created_by'  => $this->integer()->notNull(),
-            'updated_by'  => $this->integer()->notNull()
+            'created_by'  => $this->integer(),
+            'updated_by'  => $this->integer()
         ], $tableOptions);
 
         $this->createIndex('{{%idx-sys_language-name}}',   $this->table, 'name');
         $this->createIndex('{{%idx-sys_language-slug}}',   $this->table, 'slug');
         $this->createIndex('{{%idx-sys_language-alias}}',  $this->table, 'alias');
-        $this->createIndex('{{%idx-sys_language-status}}', $this->table, 'status');
 
-        $this->addForeignKey('{{%fk-sys_language-domain}}', $this->table, 'domain_id', '{{%sys_domain}}', 'id', 'CASCADE');
-
-        // Insert default languages
-        $this->batchInsert($this->table, [
-            'slug',       'name',     'locale',     'alias',  'icon', 'status', 'domain_id',
-            'is_default', 'position', 'created_at', 'updated_at', 'created_by', 'updated_by'
-        ],
-        [
-            ['ru', 'Русский', 'ru_RU', 'ru',  'ru', 1, null,  1, 0, time(), time(), 1, 1],
-            ['en', 'English', 'en_GB', 'en',  'gb', 1, null,  0, 1, time(), time(), 1, 1],
-        ]);
+        $this->insertDefault();
     }
 
     /**
@@ -71,5 +57,22 @@ class m170807_160307_create_sys_language_table extends Migration
     public function down()
     {
         $this->dropTable($this->table);
+    }
+
+    /**
+     * Insert default languages.
+     * @return void
+     */
+    private function insertDefault() : void
+    {
+        // Insert default languages
+        $this->batchInsert($this->table, [
+            'slug', 'name',       'locale',     'alias',
+            'icon', 'created_at', 'updated_at', 'created_by', 'updated_by'
+        ],
+        [
+            ['ru', 'Русский', 'ru_RU', 'ru',  'ru', time(), time(), 1, 1],
+            ['en', 'English', 'en_GB', 'en',  'gb', time(), time(), 1, 1],
+        ]);
     }
 }

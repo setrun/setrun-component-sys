@@ -4,27 +4,21 @@ namespace setrun\sys\entities;
 
 use Yii;
 use setrun\sys\helpers\ArrayHelper;
-use setrun\sys\entities\queries\LanguageQuery;
+use setrun\sys\helpers\LanguageHelper;
 
 /**
  * This is the model class for table "{{%sys_language}}".
- *
  * @property integer $id
  * @property string  $slug
  * @property string  $name
  * @property string  $locale
  * @property string  $alias
  * @property string  $icon
- * @property integer $is_default
- * @property integer $domain_id
- * @property integer $status
- * @property integer $position
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $created_by
  * @property integer $updated_by
  *
- * @property Domain $d
  */
 class Language extends \yii\db\ActiveRecord
 {
@@ -34,22 +28,29 @@ class Language extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName() : string
     {
         return '{{%sys_language}}';
     }
 
     /**
-     * Create a new language.
-     * @param  $name
-     * @param  $slug
-     * @param  $locale
-     * @param  $alias
-     * @param  $icon
-     * @param  $status
-     * @return Language
+     * @inheritdoc
      */
-    public static function create($name, $slug, $locale, $alias, $icon, $status) : self
+    public function attributeLabels() : array
+    {
+        return LanguageHelper::getAttributeLabels();
+    }
+
+    /**
+     * Create a new language.
+     * @param  string $name
+     * @param  string $slug
+     * @param  string $locale
+     * @param  string $alias
+     * @param  string $icon
+     * @return self
+     */
+    public static function create($name, $slug, $locale, $alias, $icon) : self
     {
         $self = new static();
         $self->name    = $name;
@@ -57,7 +58,6 @@ class Language extends \yii\db\ActiveRecord
         $self->locale  = $locale;
         $self->alias   = $alias;
         $self->icon    = $icon;
-        $self->status  = $status;
         $self->created_by = Yii::$app->user->identity->id;
         $self->updated_by = Yii::$app->user->identity->id;
         return $self;
@@ -65,82 +65,21 @@ class Language extends \yii\db\ActiveRecord
 
     /**
      * Edit a language.
-     * @param $name
-     * @param $slug
-     * @param $locale
-     * @param $alias
-     * @param $icon
-     * @param $status
+     * @param string $name
+     * @param string $slug
+     * @param string $locale
+     * @param string $alias
+     * @param string $icon
+     * @return void
      */
-    public function edit($name, $slug, $locale, $alias, $icon, $status): void
+    public function edit($name, $slug, $locale, $alias, $icon): void
     {
-        $this->name    = $name;
-        $this->slug    = $slug;
-        $this->locale  = $locale;
-        $this->alias   = $alias;
-        $this->icon    = $icon;
-        $this->status  = $status;
+        $this->name   = $name;
+        $this->slug   = $slug;
+        $this->locale = $locale;
+        $this->alias  = $alias;
+        $this->icon   = $icon;
         $this->updated_by = Yii::$app->user->identity->id;
-    }
-
-    /**
-     *
-     */
-    public function default()
-    {
-        self::updateAll(['is_default' => 0]);
-        $this->is_default = 1;
-    }
-
-    /**
-     *
-     */
-    public function status($status)
-    {
-        $this->status = $status;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return static::getAttributeLabels();
-    }
-
-    /**
-     * @return array
-     */
-    public static function getAttributeLabels() : array
-    {
-        return [
-            'id'         => Yii::t('setrun/sys/language', 'ID'),
-            'slug'       => Yii::t('setrun/sys/language', 'Slug'),
-            'name'       => Yii::t('setrun/sys/language', 'Name'),
-            'locale'     => Yii::t('setrun/sys/language', 'Locale'),
-            'alias'      => Yii::t('setrun/sys/language', 'Alias'),
-            'icon'       => Yii::t('setrun/sys/language', 'Icon'),
-            'is_default' => Yii::t('setrun/sys/language', 'Default'),
-            'domain_id'  => Yii::t('setrun/sys/language', 'Domain'),
-            'status'     => Yii::t('setrun/sys/language', 'Status'),
-            'position'   => Yii::t('setrun/sys/language', 'Position'),
-            'created_at' => Yii::t('setrun/sys/language', 'Created At'),
-            'updated_at' => Yii::t('setrun/sys/language', 'Updated At'),
-            'created_by' => Yii::t('setrun/sys/language', 'Created By'),
-            'updated_by' => Yii::t('setrun/sys/language', 'Updated By'),
-        ];
-    }
-
-    /**
-     * Get all statuses.
-     * @return array
-     */
-    public static function getStatuses() : array
-    {
-        return [
-            self::STATUS_ACTIVE => Yii::t('setrun/sys/language', 'Active'),
-            self::STATUS_DRAFT  => Yii::t('setrun/sys/language', 'Draft')
-        ];
     }
 
     /**
@@ -149,6 +88,19 @@ class Language extends \yii\db\ActiveRecord
      */
     public function getStatusName() : string
     {
-        return ArrayHelper::get(self::getStatuses(), $this->status);
+        return ArrayHelper::get(LanguageHelper::getStatuses(), $this->status);
+    }
+
+    /**
+     * Get list of languages.
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getList()
+    {
+        return self::find()
+        ->select(['id', 'slug', 'name','locale', 'alias', 'icon'])
+        ->indexBy('slug')
+        ->asArray()
+        ->all();
     }
 }

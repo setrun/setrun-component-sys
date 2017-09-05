@@ -42,20 +42,6 @@ class LanguageController extends BackController
     }
 
     /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return ArrayHelper::merge([
-            'sorting' => [
-                'class'          => Sorting::className(),
-                'orderAttribute' => 'position',
-                'query'          => Language::find()
-            ]
-        ], parent::actions());
-    }
-
-    /**
      * Lists all Language models.
      * @return mixed
      */
@@ -92,9 +78,8 @@ class LanguageController extends BackController
             try {
                 $model = $this->service->create($form);
                 return $this->redirect(['view', 'id' => $model->id]);
-            } catch (\DomainException $e) {
-                Yii::$app->errorHandler->logException($e);
-                Yii::$app->session->setFlash('error', $e->getMessage());
+            } catch (YiiException $e) {
+                $form->addErrors($e->data);
             }
         }
         return $this->render('create', [
@@ -113,8 +98,7 @@ class LanguageController extends BackController
         $model = $this->findModel($id);
         $form  = new LanguageForm($model);
         if (Yii::$app->request->isAjax && $form->load(Yii::$app->request->post())){
-            $errors = ActiveForm::validate($form);
-            if (!$errors) {
+            if (!$errors = ActiveForm::validate($form)) {
                 try {
                     $this->service->edit($form->id, $form);
                     $this->output['status'] = 1;
@@ -122,7 +106,7 @@ class LanguageController extends BackController
                     $errors = ErrorHelper::checkModel($e->data, $form);
                 }
             }
-            $this->output['errors'] = $errors; return;
+            return $this->output['errors'] = $errors;
         }
         return $this->render('edit', ['model' => $form]);
     }

@@ -13,11 +13,10 @@ use yii\behaviors\TimestampBehavior;
 use setrun\sys\behaviors\TimeAgoBehavior;
 
 /**
- * Class Domain.
+ * Class Language.
  */
 class Language extends \setrun\sys\entities\Language
 {
-
     /**
      * @inheritdoc
      */

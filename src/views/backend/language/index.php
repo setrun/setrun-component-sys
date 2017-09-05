@@ -20,18 +20,16 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->params['pjaxID']        = 'language-index';
 
 Icon::map($this, Icon::FI);
-LanguageAsset::register($this, [
-    'js/language/index.js'
-]);
+LanguageAsset::register($this);
 ?>
 <div class="language-index">
     <div class="box">
         <div class="box-body">
             <p>
-                <a href="<?= Url::to(['create']) ?>" class="btn btn-success">
+                <a href="<?= Url::to(['create']) ?>" class="btn btn-default">
                     <i class="fa fa-fw fa-plus"></i> <?= Yii::t('setrun/sys/language', 'Create Language') ?>
                 </a>
-                <a href="javascript:void(0)" class="btn btn-info" id="clear-filter">
+                <a href="javascript:void(0)" class="btn btn-default" id="clear-filter">
                     <?= Icon::show('times', [], Icon::FA) ?>
                     <?= Yii::t('setrun/backend', 'Clear filters') ?>
                 </a>
@@ -103,47 +101,8 @@ LanguageAsset::register($this, [
                             'presetDropdown' => true,
                         ])
                     ],
-
-                    'status' => [
-                        'attribute' => 'status',
-                        'filter'    => Language::getStatuses(),
-                        'filterInputOptions' => [
-                            'prompt'  => '&nbsp;',
-                            'encode'  => false
-                        ],
-                        'format'    => 'raw',
-                        'value'     => function($model, $index, $key){
-                            $checked = (int)$model->status === 1 ? 'checked' : '';
-                            $html    = "<input type=\"checkbox\" class=\"switcher switcher_status\" {$checked} data-id=\"{$model->id}\" data-url=\"" . Url::to(['status', 'id' => $model->id]) ."\"  id=\"switcher_status_{$model->id}\" />";
-                            $html   .= "<label class='switcher_label' for=\"switcher_status_{$model->id}\"></label>";
-                            return $html;
-                        },
-                    ],
-                    'is_default' => [
-                        'attribute'=> 'is_default',
-                        'format'    => 'raw',
-                        'value'     => function($model, $index, $key){
-                            $checked = $model->is_default == 1 ? 'checked' : '';
-                            $html    = "<input type=\"checkbox\" 
-                                               class=\"switcher switcher_default\" {$checked} 
-                                               data-id=\"{$model->id}\" 
-                                               data-url=\"" . Url::to(['default', 'id' => $model->id]) ."\" 
-                                               data-confirm-message=\"" . Yii::t('setrun/sys/language', 'Do you want to set the default language ?') ."\" 
-                                               id=\"switcher_default_{$model->id}\" 
-                                        />";
-                            $html   .= "<label class='switcher_label' for=\"switcher_default_{$model->id}\"></label>";
-                            return $html;
-                        },
-                    ],
                     [
                         'class' => 'setrun\backend\over\grid\ActionColumn',
-                        'template' =>'{sort} {edit} {view}  {delete}',
-                        'buttons'  =>[
-                            'sort' => function ($url, $model, $key) {
-                                return '<div class="sortable-widget-handler btn btn-xs btn-default" data-id="'.$model->id.'">☰</div>';
-                            },
-
-                        ],
                     ],
                 ],
             ]); ?>

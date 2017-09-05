@@ -14,10 +14,10 @@ $this->params['breadcrumbs'][] = $model->name;
 <div class="domain-view">
     <div class="box">
         <div class="box-body">
-            <p class="pull-right">
+            <p class="pull-left">
                 <?= Html::a('<i class="fa fa-pencil"></i> ' . Yii::t('setrun/backend', 'Edit'),   ['edit',  'id' => $model->id], ['class' => 'btn btn-default']) ?>
                 <?= Html::a('<i class="fa fa-trash"></i> ' . Yii::t('setrun/backend', 'Delete'),  ['delete','id' => $model->id], [
-                    'class' => 'btn btn-danger ajax-delete-item',
+                    'class' => 'btn btn-default ajax-delete-item',
                     'data-confirm-message' => Yii::t('setrun/backend', 'Do you want to delete ?'),
                     'data-redirect-url' => \yii\helpers\Url::to(['index'])
                 ]) ?>
@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $model->name;
                     'slug',
                     'locale',
                     'alias',
-                    'status',
                     'icon' => [
                         'attribute' => 'icon',
                         'format'    => 'raw',
@@ -45,14 +44,14 @@ $this->params['breadcrumbs'][] = $model->name;
                         'attribute' => 'created_at',
                         'format'    => 'raw',
                         'value' => function($model, $index){
-                            return  Yii::$app->formatter->asDate($model->created_at, 'long') . ' [<i>' . $model->getTimeAgo('created_at') . '</i>]';
+                            return  Yii::$app->formatter->asDate($model->created_at, 'long');
                         }
                     ],
                     'updated_at' => [
                         'attribute' => 'updated_at',
                         'format'    => 'raw',
                         'value' => function($model, $index){
-                            return  Yii::$app->formatter->asDate($model->updated_at, 'long') . ' [<i>' . $model->getTimeAgo('updated_at') . '</i>]';
+                            return  Yii::$app->formatter->asDate($model->updated_at, 'long');
                         }
                     ],
                     'created_by',
